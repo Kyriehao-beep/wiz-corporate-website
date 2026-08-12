@@ -39,4 +39,3 @@ jobs:
             echo 'Prohibited plan placeholder found.'
             exit 1
           fi
-

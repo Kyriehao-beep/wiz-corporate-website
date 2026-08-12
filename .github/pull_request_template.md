@@ -16,4 +16,3 @@ Describe the scoped change and why it is needed.
 - [ ] Customer identities and logos are removed unless explicitly authorized
 - [ ] Generated imagery is not presented as documentary factory evidence
 - [ ] Price, MOQ, lead-time, certificate, and compliance claims are verified
-

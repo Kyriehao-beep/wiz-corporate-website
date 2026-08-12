@@ -16,4 +16,3 @@ The repository begins with a documentation-baseline workflow because the approve
 ## Protected material
 
 Never commit environment files, API keys, database credentials, customer artwork, quotation files, signed storage URLs, production exports, or downloaded private account data.
-
