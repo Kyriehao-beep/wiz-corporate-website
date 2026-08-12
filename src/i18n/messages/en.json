@@ -1,0 +1,37 @@
+{
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "applications": "Applications",
+    "process": "Process",
+    "capabilities": "Capabilities",
+    "about": "About",
+    "contact": "Contact",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "primaryLabel": "Primary",
+    "mobileLabel": "Mobile"
+  },
+  "home": {
+    "eyebrow": "Custom rubber patches for demanding environments",
+    "title": "WIZ — Precision in Every Color.",
+    "titleLead": "WIZ — Precision",
+    "titleAccent": "in every color.",
+    "description": "From surf and watersports to outdoor apparel and technical gear, we turn brand artwork into durable custom rubber patches.",
+    "secondaryCta": "Explore applications"
+  },
+  "products": { "title": "Products" },
+  "applications": { "title": "Applications" },
+  "process": { "title": "Our process" },
+  "capabilities": { "title": "Capabilities" },
+  "about": { "title": "About WIZ" },
+  "contact": { "title": "Contact" },
+  "rfq": { "cta": "Start your custom patch" },
+  "common": {
+    "skipToContent": "Skip to content",
+    "changeLanguage": "Change language",
+    "language": "Language",
+    "footerTagline": "Precision in Every Color. Built for the Outdoors.",
+    "rights": "All rights reserved."
+  }
+}

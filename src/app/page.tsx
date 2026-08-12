@@ -1,7 +1,5 @@
+import { redirect } from 'next/navigation'
+
 export default function RootPage() {
-  return (
-    <main>
-      <a href="/en">Continue to WIZ</a>
-    </main>
-  )
+  redirect('/en')
 }

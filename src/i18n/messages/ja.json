@@ -1,0 +1,37 @@
+{
+  "navigation": {
+    "home": "ホーム",
+    "products": "製品",
+    "applications": "用途",
+    "process": "製造工程",
+    "capabilities": "対応力",
+    "about": "会社情報",
+    "contact": "お問い合わせ",
+    "menuOpen": "メニューを開く",
+    "menuClose": "メニューを閉じる",
+    "primaryLabel": "メインナビゲーション",
+    "mobileLabel": "モバイルナビゲーション"
+  },
+  "home": {
+    "eyebrow": "過酷な環境に応えるカスタムラバーパッチ",
+    "title": "WIZ — 色彩のすべてに、精密さを。",
+    "titleLead": "WIZ — すべての色に",
+    "titleAccent": "精密さを。",
+    "description": "サーフィンやウォータースポーツ、アウトドアウェア、テクニカルギアまで、ブランドのデザインを耐久性の高いラバーパッチに仕上げます。",
+    "secondaryCta": "用途を見る"
+  },
+  "products": { "title": "製品" },
+  "applications": { "title": "用途" },
+  "process": { "title": "製造工程" },
+  "capabilities": { "title": "対応力" },
+  "about": { "title": "WIZについて" },
+  "contact": { "title": "お問い合わせ" },
+  "rfq": { "cta": "カスタムパッチを相談する" },
+  "common": {
+    "skipToContent": "本文へ移動",
+    "changeLanguage": "言語を変更",
+    "language": "言語",
+    "footerTagline": "色彩のすべてに精密さを。アウトドアのための品質。",
+    "rights": "無断転載を禁じます。"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "navigation": {
+    "home": "首页",
+    "products": "产品",
+    "applications": "应用场景",
+    "process": "生产流程",
+    "capabilities": "制造能力",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "menuOpen": "打开菜单",
+    "menuClose": "关闭菜单",
+    "primaryLabel": "主导航",
+    "mobileLabel": "移动端导航"
+  },
+  "home": {
+    "eyebrow": "为严苛环境定制橡胶标牌",
+    "title": "WIZ — 精准呈现每一种颜色。",
+    "titleLead": "WIZ — 精准呈现",
+    "titleAccent": "每一种颜色。",
+    "description": "从冲浪与水上运动，到户外服装和专业装备，我们将品牌设计转化为耐用的定制橡胶标牌。",
+    "secondaryCta": "探索应用场景"
+  },
+  "products": { "title": "产品" },
+  "applications": { "title": "应用场景" },
+  "process": { "title": "生产流程" },
+  "capabilities": { "title": "制造能力" },
+  "about": { "title": "关于 WIZ" },
+  "contact": { "title": "联系我们" },
+  "rfq": { "cta": "开始定制标牌" },
+  "common": {
+    "skipToContent": "跳到主要内容",
+    "changeLanguage": "切换语言",
+    "language": "语言",
+    "footerTagline": "精准呈现每一种颜色，为户外而生。",
+    "rights": "保留所有权利。"
+  }
+}
