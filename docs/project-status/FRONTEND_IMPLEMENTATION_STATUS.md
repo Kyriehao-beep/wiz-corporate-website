@@ -78,10 +78,18 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 
 ### Task 5 — Homepage and discovery pages
 
-- Implemented in the current working branch; pending commit at the time of this update.
+- Commit: `f5e8dd1 feat: build WIZ homepage and catalog discovery`.
 - Added the complete homepage narrative, product index, application index, responsive discovery cards, and contextual RFQ entry points.
 - Generated `public/media/drafts/surf-watersports-gear-ai-draft.png`; the interface and asset register identify it as an AI draft, not a real WIZ/customer photograph.
 - Focused evidence: homepage component test passed and TypeScript passed.
+
+### Task 6 — Product and application detail routes
+
+- Implemented in the current working branch; pending commit at the time of this update.
+- Added five product detail routes and nine application detail routes across all three locales through static parameter generation.
+- Product details explain suitability, construction, visual/attachment options, artwork review, and 2D versus 3D relief.
+- Application details connect buyer problems to recommended products and contextual RFQ links; surf/watersports explicitly states that board attachment requires substrate/adhesive testing and that the products are not EVA traction pads.
+- Focused evidence: 2 detail component tests passed, TypeScript passed, and focused ESLint passed.
 
 ## Latest Verified Evidence
 
@@ -94,9 +102,6 @@ Verification after Task 5 implementation:
 ## Remaining Frontend Tasks
 
 ### Task 6 — Detail routes
-
-- Build five product detail routes and nine application detail routes for every locale.
-- Add missing-slug 404 behavior and contextual RFQ entry points.
 
 ### Task 7 — Supporting trust pages
 
