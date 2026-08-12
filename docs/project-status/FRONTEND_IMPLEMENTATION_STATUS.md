@@ -86,9 +86,11 @@ Verification after Task 3:
 
 ### Task 4 — Catalog and RFQ context contracts
 
-- Define five approved product entries and nine application entries.
-- Priority applications: surf/watersports, outdoor apparel, and backpacks/gear bags.
-- Add typed repository boundary and contextual RFQ URL builder.
+- Implemented in the current working branch; pending commit at the time of this update.
+- Added five approved product entries and nine application entries.
+- Priority applications are surf/watersports, outdoor apparel, and backpacks/gear bags.
+- Added a typed repository boundary and contextual RFQ URL builder.
+- Test evidence: 3 catalog/RFQ tests passed; TypeScript passed.
 
 ### Task 5 — Homepage and discovery pages
 
