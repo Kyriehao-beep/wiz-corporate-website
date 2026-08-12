@@ -1,0 +1,2 @@
+const capabilities = ['8+ years related experience', 'Owned mainland factory', 'Hong Kong company', 'AI-assisted color matching']
+export function CapabilityStrip() { return <section className="capability-strip" aria-label="Core capabilities"><div className="container capability-strip__grid">{capabilities.map((item, index) => <div key={item}><span>0{index + 1}</span><strong>{item}</strong></div>)}</div></section> }

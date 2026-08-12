@@ -1,0 +1,13 @@
+import { ArrowRight } from 'lucide-react'
+import { ApplicationGrid } from '@/features/catalog/application-grid'
+import { ProductGrid } from '@/features/catalog/product-grid'
+import { fixtureCatalogRepository } from '@/features/catalog/fixture-catalog-repository'
+import { CapabilityStrip } from '@/components/site/capability-strip'
+import { ColorMatchingStory } from '@/components/site/color-matching-story'
+import { Hero } from '@/components/site/hero'
+import { SectionHeading } from '@/components/site/section-heading'
+import { ButtonLink } from '@/components/ui/button'
+import { Container } from '@/components/ui/container'
+import type { Locale } from '@/i18n/locales'
+import type { Messages } from '@/i18n/messages'
+export async function HomePage({ locale, messages }: { locale: Locale; messages: Messages }) { const [products, applications] = await Promise.all([fixtureCatalogRepository.listProducts(locale), fixtureCatalogRepository.listApplications(locale)]); const priority = applications.filter((item) => item.priority); return <main id="main-content" tabIndex={-1}><Hero locale={locale} messages={messages}/><CapabilityStrip/><section className="content-section"><Container><SectionHeading eyebrow="Priority use environments" title="Built around where the patch has to perform." copy="We start with the substrate, attachment method, handling, and exposure conditions—not a one-size-fits-all promise."/><ApplicationGrid applications={priority} locale={locale}/><div className="section-action"><ButtonLink href={`/${locale}/applications`} variant="secondary">View all applications<ArrowRight size={16}/></ButtonLink></div></Container></section><section className="content-section content-section--raised"><Container><SectionHeading eyebrow="Product families" title="Five focused ways to build your identity."/><ProductGrid products={products} locale={locale}/></Container></section><ColorMatchingStory/><section className="focus-section"><Container className="focus-grid"><p className="eyebrow">Small, focused, accountable</p><div><h2>Direct attention from artwork review to final quality control.</h2><p>WIZ combines a Hong Kong company with its own mainland factory. Our focused scale keeps communication close to the people reviewing specifications and making the product.</p><ButtonLink href={`/${locale}/about`} variant="secondary">About WIZ</ButtonLink></div></Container></section><section className="final-cta"><Container><p className="eyebrow">Bring us the application, not just the artwork</p><h2>Let’s define the patch around the real use environment.</h2><ButtonLink href={`/${locale}/rfq`}>{messages.rfq.cta}<ArrowRight size={17}/></ButtonLink></Container></section></main> }

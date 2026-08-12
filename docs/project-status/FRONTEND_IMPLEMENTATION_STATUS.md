@@ -70,33 +70,28 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 - Added Quiet Premium design tokens, responsive hero concept, header, footer, language selector, mobile navigation, skip link, visible keyboard focus, and reusable UI primitives.
 - Added localized hero display text and final DOM language synchronization while preserving static generation.
 
-## Latest Verified Evidence
-
-Verification after Task 3:
-
-- `pnpm lint`: passed.
-- `pnpm typecheck`: passed.
-- `pnpm test:unit`: 3/3 tests passed.
-- `pnpm build`: passed with Webpack; `/en`, `/ja`, and `/zh-CN` generated as static pages.
-- Chrome E2E: 5/5 tests passed, including root redirect, locale routes, document language attributes, mobile navigation, and keyboard skip link.
-- Manual visual QA completed at 1440×1000 and 390×844.
-- No browser console errors were observed during the visual check.
-
-## Remaining Frontend Tasks
-
 ### Task 4 — Catalog and RFQ context contracts
 
-- Implemented in the current working branch; pending commit at the time of this update.
-- Added five approved product entries and nine application entries.
+- Commit: `8ecc2c3 feat: define WIZ catalog and RFQ context contracts`.
+- Added five approved product entries, nine application entries, a typed fixture repository boundary, and contextual RFQ URL construction.
 - Priority applications are surf/watersports, outdoor apparel, and backpacks/gear bags.
-- Added a typed repository boundary and contextual RFQ URL builder.
-- Test evidence: 3 catalog/RFQ tests passed; TypeScript passed.
 
 ### Task 5 — Homepage and discovery pages
 
-- Complete the homepage section sequence.
-- Build product and application index pages.
-- Use approved AI draft imagery where visual assets materially improve the page.
+- Implemented in the current working branch; pending commit at the time of this update.
+- Added the complete homepage narrative, product index, application index, responsive discovery cards, and contextual RFQ entry points.
+- Generated `public/media/drafts/surf-watersports-gear-ai-draft.png`; the interface and asset register identify it as an AI draft, not a real WIZ/customer photograph.
+- Focused evidence: homepage component test passed and TypeScript passed.
+
+## Latest Verified Evidence
+
+Verification after Task 5 implementation:
+
+- Focused homepage component test: passed.
+- `tsc --noEmit`: passed.
+- The complete lint/build/browser gate remains scheduled after Task 8.
+
+## Remaining Frontend Tasks
 
 ### Task 6 — Detail routes
 
