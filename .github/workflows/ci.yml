@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  documentation:
+    name: Documentation baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reject unresolved merge markers
+        run: |
+          if git grep -nE '^(<{7}|={7}|>{7})' -- '*.md' '.gitignore'; then
+            echo 'Unresolved merge markers found.'
+            exit 1
+          fi
+
+      - name: Verify required project documents
+        run: |
+          test -f docs/superpowers/specs/2026-08-12-wiz-corporate-website-prd-design.md
+          test -f docs/superpowers/plans/2026-08-12-wiz-release-one-roadmap.md
+          test -f docs/superpowers/plans/2026-08-12-wiz-public-website.md
+          test -f docs/superpowers/plans/2026-08-12-wiz-rfq-admin.md
+          test -f docs/superpowers/plans/2026-08-12-wiz-production-launch.md
+          test -f docs/superpowers/plans/2026-08-12-wiz-prd-coverage-matrix.md
+
+      - name: Verify no prohibited plan placeholders
+        run: |
+          if grep -RniE 'TBD|TODO|FIXME|implement later|fill in details|similar to task' docs/superpowers/plans; then
+            echo 'Prohibited plan placeholder found.'
+            exit 1
+          fi
+
