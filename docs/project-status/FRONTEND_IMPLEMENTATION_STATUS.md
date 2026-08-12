@@ -85,11 +85,21 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 
 ### Task 6 — Product and application detail routes
 
-- Implemented in the current working branch; pending commit at the time of this update.
+- Commit: `987f2f3 feat: add WIZ catalog detail experiences`.
 - Added five product detail routes and nine application detail routes across all three locales through static parameter generation.
 - Product details explain suitability, construction, visual/attachment options, artwork review, and 2D versus 3D relief.
 - Application details connect buyer problems to recommended products and contextual RFQ links; surf/watersports explicitly states that board attachment requires substrate/adhesive testing and that the products are not EVA traction pads.
 - Focused evidence: 2 detail component tests passed, TypeScript passed, and focused ESLint passed.
+
+### Task 7 — Supporting trust pages and RFQ frontend
+
+- Implemented in the current working branch; pending commit at the time of this update.
+- Added localized custom process, capabilities, about, contact, privacy, terms, and RFQ routes.
+- The RFQ route is a presentation-only form with product/application URL context; submit is intentionally disabled until the backend inquiry phase.
+- Contact values are not invented. The page states that direct contact details and exact addresses await approved company data.
+- Privacy and terms copy is visibly marked as a company-review draft until the backend data flow, retention, vendors, contact details, and governing law are known.
+- Corrected the main navigation process target to `/custom-process` and added footer legal links.
+- Focused evidence: 3 support-page component tests passed, TypeScript passed, and focused ESLint passed.
 
 ## Latest Verified Evidence
 
@@ -104,9 +114,6 @@ Verification after Task 5 implementation:
 ### Task 6 — Detail routes
 
 ### Task 7 — Supporting trust pages
-
-- Build custom process, capabilities, about, contact, privacy, and terms pages.
-- Keep contact values and legal copy explicitly in draft/awaiting-approval state where required.
 
 ### Task 8 — SEO and final release gate
 

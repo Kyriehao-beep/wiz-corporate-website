@@ -12,7 +12,7 @@ import type { Locale } from '@/i18n/locales'
 const navigation = [
   { key: 'products', path: '/products' },
   { key: 'applications', path: '/applications' },
-  { key: 'process', path: '/process' },
+  { key: 'process', path: '/custom-process' },
   { key: 'capabilities', path: '/capabilities' },
   { key: 'about', path: '/about' },
 ] as const

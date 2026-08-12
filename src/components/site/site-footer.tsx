@@ -22,7 +22,7 @@ export function SiteFooter({ locale, messages }: { locale: Locale; messages: Mes
         </div>
         <div className="site-footer__base">
           <span>© {year} WIZ. {messages.common.rights}</span>
-          <span>Hong Kong · Dongguan</span>
+          <span className="footer-links"><span>Hong Kong · Dongguan</span><a href={`/${locale}/privacy`}>Privacy</a><a href={`/${locale}/terms`}>Terms</a></span>
         </div>
       </Container>
     </footer>
