@@ -8,6 +8,7 @@ import { isLocale, locales } from '@/i18n/locales'
 import { loadMessages } from '@/i18n/messages'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
+import { MotionLayer } from '@/components/site/motion-layer'
 import { SkipLink } from '@/components/ui/skip-link'
 import { DocumentLanguage } from '@/components/site/document-language'
 import { buildMetadata } from '@/lib/seo'
@@ -40,6 +41,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <NextIntlClientProvider locale={locale} messages={messages}>
       <DocumentLanguage locale={locale} />
       <SkipLink label={messages.common.skipToContent} />
+      <MotionLayer />
       <SiteHeader locale={locale} />
       {children}
       <SiteFooter locale={locale} messages={messages} />
