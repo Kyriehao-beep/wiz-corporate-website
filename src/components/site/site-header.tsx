@@ -25,7 +25,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   return (
     <header className="site-header">
       <Container className="site-header__inner">
-        <a aria-label="WIZ home" className="brand" href={`/${locale}`}>
+        <a aria-label="WIZ home" className="brand" href={`/${locale}`} translate="no">
           <span className="brand__mark" aria-hidden="true">W</span>
           <span className="brand__name">WIZ</span>
           <span className="brand__descriptor">Rubber Patch<br />Manufacturing</span>

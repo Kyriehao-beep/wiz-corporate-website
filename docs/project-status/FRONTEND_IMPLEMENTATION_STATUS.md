@@ -93,13 +93,22 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 
 ### Task 7 — Supporting trust pages and RFQ frontend
 
-- Implemented in the current working branch; pending commit at the time of this update.
+- Commit: `b2ce2e5 feat: add WIZ trust and inquiry pages`.
 - Added localized custom process, capabilities, about, contact, privacy, terms, and RFQ routes.
 - The RFQ route is a presentation-only form with product/application URL context; submit is intentionally disabled until the backend inquiry phase.
 - Contact values are not invented. The page states that direct contact details and exact addresses await approved company data.
 - Privacy and terms copy is visibly marked as a company-review draft until the backend data flow, retention, vendors, contact details, and governing law are known.
 - Corrected the main navigation process target to `/custom-process` and added footer legal links.
 - Focused evidence: 3 support-page component tests passed, TypeScript passed, and focused ESLint passed.
+
+### Task 8 — SEO and release verification
+
+- Implemented in the current working branch; pending commit at the time of this update.
+- Added localized page-level titles/descriptions, canonical URLs, `en`/`ja`/`zh-CN`/`x-default` alternates, Open Graph metadata and image, sitemap, robots, and theme color.
+- Applied the current Vercel Web Interface Guidelines to form labels/autocomplete/input types, touch feedback, focus, heading wrapping, translation boundaries, and overflow handling.
+- Added production-preview E2E coverage for contextual surf inquiry flow, mobile keyboard navigation, three locale roots, primary route headings, horizontal overflow, console errors, sitemap, robots, and OG image.
+- Fresh evidence before final commit: lint, TypeScript, 13 unit/component tests, and a 77-page production build passed. Chromium E2E passed 8/8.
+- Firefox and WebKit browser binaries were requested, but the Playwright CDN remained at 0% and the local cache did not grow; their final runs remain externally blocked and must not be reported as passed.
 
 ## Latest Verified Evidence
 
@@ -116,10 +125,8 @@ Verification after Task 5 implementation:
 ### Task 7 — Supporting trust pages
 
 ### Task 8 — SEO and final release gate
-
-- Add localized metadata, canonical links, language alternates, sitemap, robots, and Open Graph image.
-- Complete responsive, route integrity, accessibility, console, and cross-browser verification.
-- Perform code review and resolve accepted findings before starting the RFQ/admin plan.
+- Complete Firefox and WebKit verification when their Playwright browser downloads become available.
+- Perform final integration choice after the last commit: merge locally, open a pull request, or preserve the branch.
 
 ## Resume Checklist
 

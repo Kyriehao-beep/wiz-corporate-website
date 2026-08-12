@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">WIZ custom rubber patches</title>
+  <desc id="description">Precision in Every Color. Built for the Outdoors.</desc>
+  <rect width="1200" height="630" fill="#16231c"/>
+  <circle cx="1040" cy="110" r="210" fill="#253b30"/>
+  <path d="M870 170h230v180H870z" rx="26" fill="#d8ff3e" transform="rotate(-8 985 260)"/>
+  <text x="72" y="390" fill="#f3f1ec" font-family="Georgia, serif" font-size="94">WIZ — Precision</text>
+  <text x="72" y="490" fill="#f3f1ec" font-family="Georgia, serif" font-size="94">in Every Color.</text>
+  <text x="76" y="560" fill="#d8ff3e" font-family="Arial, sans-serif" font-size="23" letter-spacing="6">CUSTOM RUBBER PATCH MANUFACTURING</text>
+</svg>
