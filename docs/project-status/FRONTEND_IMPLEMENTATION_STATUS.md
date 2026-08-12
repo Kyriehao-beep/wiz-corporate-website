@@ -108,6 +108,8 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 - Applied the current Vercel Web Interface Guidelines to form labels/autocomplete/input types, touch feedback, focus, heading wrapping, translation boundaries, and overflow handling.
 - Added production-preview E2E coverage for contextual surf inquiry flow, mobile keyboard navigation, three locale roots, primary route headings, horizontal overflow, console errors, sitemap, robots, and OG image.
 - Fresh evidence before final commit: lint, TypeScript, 13 unit/component tests, and a 77-page production build passed. Chromium E2E passed 8/8.
+- Manual visual QA completed on the final production preview at 1440×1000 and 390×844. The homepage composition, AI-draft label, mobile single-column flow, desktop card grids, CTA visibility, and footer were visually intact.
+- Local preview URL during this session: `http://127.0.0.1:3000/en` (available only while the local preview process is running).
 - Firefox and WebKit browser binaries were requested, but the Playwright CDN remained at 0% and the local cache did not grow; their final runs remain externally blocked and must not be reported as passed.
 
 ## Latest Verified Evidence
