@@ -9,6 +9,15 @@ describe('supporting trust pages', () => {
     expect(screen.getByRole('heading', { name: /artwork review/i })).toBeInTheDocument()
     render(<CapabilitiesPage locale="en" />)
     expect(screen.getAllByText(/AI-assisted color matching/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('img')).toHaveLength(4)
+    expect(screen.getByRole('img', { name: /owned mainland factory/i })).toHaveAttribute(
+      'src',
+      expect.stringContaining('capability-owned-factory.png'),
+    )
+    expect(screen.getByRole('img', { name: /eight years of rubber patch experience/i })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /automatic color matching equipment/i })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /sampling and repeat production/i })).toBeInTheDocument()
+    expect(screen.queryByText(/AI DRAFT/i)).not.toBeInTheDocument()
   })
   it('does not invent company contact values', () => {
     render(<ContactPage locale="en" />)

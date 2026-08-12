@@ -114,21 +114,46 @@ This file is the durable project memory for the WIZ public website frontend. Upd
 
 ## Latest Verified Evidence
 
-Verification after Task 5 implementation:
+Verification this session (visual asset refresh + quality gate):
 
-- Focused homepage component test: passed.
-- `tsc --noEmit`: passed.
-- The complete lint/build/browser gate remains scheduled after Task 8.
+- Lint (changed files only): clean — `eslint` on all 7 modified/new source files returned exit 0. Full-project `eslint .` shows ~9.6k pre-existing problems (test-fixture `__Unused` warnings, etc.) unrelated to this change.
+- `tsc --noEmit`: passed (no output).
+- Unit/component tests: **16/16 passed** (11 files), including the new `capability-media` test and updated `support-pages` test.
+- `next build --webpack`: verified — `.next` produced 74 static HTML files and a complete manifest (sandbox `rm` cleanup warning does not affect the artifact).
+- Chromium E2E: **blocked by sandbox** (browser process SIGKILLed). Not re-verified this session.
+- Firefox / WebKit E2E: externally blocked.
+- Net: code-level quality gate green; cross-browser E2E remains unverified in this environment and must be run on a non-sandboxed runner before launch.
+
+## Visual Asset Refresh (post-Task 8 sub-plan)
+
+Completed in current working session. Replaced AI-draft labels with a complete image-led visual system.
+
+### Application media system (committed `5bdc45f`)
+- Typed nine-entry slug→image mapping (`src/features/catalog/application-media.ts`).
+- Public-safe alt text (no AI/draft labels) for all three locales.
+- Nine application images generated via ImageGen, registered in `public/media/drafts/README.md`.
+- Two filename mismatches corrected: `application-promotional.png` → `application-promotional-merchandise.png`, `application-marine.png` → `application-marine-equipment.png`.
+
+### Capability cards (committed locally this session)
+- Four localized capability visual entries (`src/components/site/capability-media.ts`) with Lucide icons.
+- Premium full-bleed card component (`src/components/site/capability-card.tsx`) with gradient scrim overlay.
+- `CapabilitiesPage` composes four `CapabilityCard` instances from `getCapabilityMedia(locale)`.
+- Four capability images generated via ImageGen (1536×1024, quiet-premium art direction), all inspected and passing compliance (no text/brands/certificates/weapons).
+- **Known limitation:** the four capability images currently carry the ImageGen platform watermark. They are acceptable as interim visual placeholders but must be replaced with final, watermark-free assets before production launch.
+- CSS: desktop two-column grid, min-height 520px/430px mobile, rounded clipping, bottom-weighted gradient, white text + acid-lime accents, hover scale with cubic-bezier easing (`.35s`, tightened from `.7s` per ui-ux-pro-max micro-interaction guidance).
+
+### Skill-driven refinement (ui-ux-pro-max)
+- Design-system audit performed: confirmed Quiet Premium brand tokens satisfy skill's accessibility/intent; no palette swap needed (generic navy/blue recommendation deferred to brand decision).
+- Pro-rules checklist applied: animation timing tightened from `.7s` to `.35s` on capability-card image hover (skill guideline: 150–300ms micro-interactions).
+- All other pro-rules items verified pass: SVG icons (lucide-react), focus rings (3px signal lime), touch targets ≥44px, prefers-reduced-motion, semantic color tokens, no emoji icons.
 
 ## Remaining Frontend Tasks
 
-### Task 6 — Detail routes
-
-### Task 7 — Supporting trust pages
-
-### Task 8 — SEO and final release gate
-- Complete Firefox and WebKit verification when their Playwright browser downloads become available.
-- Perform final integration choice after the last commit: merge locally, open a pull request, or preserve the branch.
+### Task 8 residual — Cross-browser E2E
+- Chromium E2E: **not executable in this sandbox.** This session re-ran it three ways (default webServer, single worker, and reusing a pre-started `next start` server); every attempt was SIGKILLed (exit 137) the instant Playwright spawned the Chrome browser process. `next start` itself runs fine (HTTP 200), so the failure is the sandbox killing the browser, not a code/test defect. Must not be reported as passed this session.
+- Firefox / WebKit E2E: **externally blocked** — Playwright browser downloads unreachable from this network. Must not be reported as passed.
+- Sandbox safe-delete guard: Playwright's pre-run cleanup of `test-results` (50+ files) triggers `SAFE_DELETE_BULK_CONFIRM_REQUIRED`; worked around by `mv test-results test-results.bak` so Playwright starts from an empty dir. Do not `rm -rf` test artifacts here.
+- Final integration choice after commit: merge locally, open a pull request, or preserve the branch (per visual-refresh plan constraint: no push/PR within this plan).
 
 ## Resume Checklist
 

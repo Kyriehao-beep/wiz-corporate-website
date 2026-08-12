@@ -1,5 +1,7 @@
-import { ArrowRight, Check, Factory, Palette, ScanLine, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 
+import { CapabilityCard } from '@/components/site/capability-card'
+import { getCapabilityMedia } from '@/components/site/capability-media'
 import { ColorMatchingStory } from '@/components/site/color-matching-story'
 import { Button, ButtonLink } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
@@ -15,7 +17,7 @@ function PageHero({ eyebrow, title, lead }: { eyebrow: string; title: string; le
 
 export function ProcessPage({ locale }: { locale: Locale }) { const t = text[locale]; return <main id="main-content"><PageHero eyebrow="WIZ / 01—05" title={t.process} lead={t.processLead}/><section className="content-section"><Container><ol className="process-list">{t.steps.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><h2>{step}</h2><Check aria-hidden="true"/></li>)}</ol></Container></section><ColorMatchingStory/></main> }
 
-export function CapabilitiesPage({ locale }: { locale: Locale }) { const t = text[locale]; const cards = [{ icon: Factory, title: locale === 'zh-CN' ? '自有内地工厂' : locale === 'ja' ? '自社の中国工場' : 'Owned mainland factory' }, { icon: ShieldCheck, title: locale === 'zh-CN' ? '八年以上相关经验' : locale === 'ja' ? '8年以上の関連経験' : '8+ years related experience' }, { icon: Palette, title: locale === 'zh-CN' ? 'AI 辅助自动调色' : locale === 'ja' ? 'AI支援の自動色合わせ' : 'AI-assisted color matching' }, { icon: ScanLine, title: locale === 'zh-CN' ? '打样与量产衔接' : locale === 'ja' ? 'サンプルから量産へ' : 'Sampling to repeat production' }]; return <main id="main-content"><PageHero eyebrow="Capabilities" title={t.capabilities}/><section className="content-section"><Container className="capability-cards">{cards.map(({ icon: Icon, title }) => <article key={title}><Icon aria-hidden="true"/><h2>{title}</h2><p>{locale === 'zh-CN' ? '具体参数与承诺会根据设计稿、基材和使用环境确认。' : locale === 'ja' ? '仕様と約束はデザイン、基材、使用環境の確認後に決定します。' : 'Specifications and commitments are confirmed against artwork, substrate, and use environment.'}</p></article>)}</Container></section></main> }
+export function CapabilitiesPage({ locale }: { locale: Locale }) { const t = text[locale]; return <main id="main-content"><PageHero eyebrow="Capabilities" title={t.capabilities}/><section className="content-section"><Container className="capability-cards">{getCapabilityMedia(locale).map((capability) => <CapabilityCard capability={capability} key={capability.id}/>)}</Container></section></main> }
 
 export function AboutPage({ locale }: { locale: Locale }) { const t = text[locale]; return <main id="main-content"><PageHero eyebrow="WIZ Electronic Gift Co., Limited" title={t.about}/><section className="content-section"><Container className="editorial-grid"><p className="eyebrow">Hong Kong · Dongguan</p><div><h2>{locale === 'zh-CN' ? '香港公司与自有内地工厂协同。' : locale === 'ja' ? '香港法人と自社の中国工場が連携。' : 'A Hong Kong company working with its owned mainland factory.'}</h2><p>{locale === 'zh-CN' ? '我们以八年以上相关经验，为品牌和制造客户提供橡胶标牌开发支持。公司规模保持精干，让沟通更直接、项目判断更贴近生产。' : locale === 'ja' ? '8年以上の関連経験を基に、ブランドと製造企業のラバーパッチ開発を支援します。小規模で専門的な体制により、直接的な対話と製造に近い判断を重視します。' : 'With more than eight years of related experience, WIZ supports rubber patch development for brands and manufacturers. A deliberately focused team keeps communication direct and decisions close to production.'}</p></div></Container></section></main> }
 
