@@ -190,3 +190,46 @@ h1, h2, h3 { text-wrap: balance; overflow-wrap: anywhere; scroll-margin-top: 110
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* ── Capability cards: rich hover / focus exploration (liquid-glass feel) ── */
+.capability-card {
+  transition: border-color .45s ease, box-shadow .55s ease, transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.capability-card:hover,
+.capability-card:focus-within {
+  border-color: color-mix(in srgb, var(--signal) 55%, transparent);
+  box-shadow: 0 34px 90px rgb(0 0 0 / 32%), inset 0 0 0 1px color-mix(in srgb, var(--signal) 30%, transparent);
+  transform: translateY(-5px);
+}
+.capability-card__image { transition: transform .55s cubic-bezier(.2,.7,.2,1); }
+.capability-card:hover .capability-card__image,
+.capability-card:focus-within .capability-card__image { transform: scale(1.12); }
+.capability-card__scrim { transition: background .55s ease; }
+.capability-card:hover .capability-card__scrim,
+.capability-card:focus-within .capability-card__scrim {
+  background: linear-gradient(180deg, rgba(7,13,9,.10) 6%, rgba(7,13,9,.55) 58%, rgba(7,13,9,.96) 100%);
+}
+.capability-card__topline { transition: transform .5s cubic-bezier(.2,.7,.2,1), color .35s ease; }
+.capability-card:hover .capability-card__topline,
+.capability-card:focus-within .capability-card__topline { transform: translateY(-3px); color: var(--signal); }
+.capability-card__detail {
+  max-height: 0; opacity: 0; overflow: hidden; margin: 0;
+  color: rgba(255,255,255,.74); font-size: .82rem; line-height: 1.6;
+  transform: translateY(10px);
+  transition: max-height .55s ease, opacity .45s ease, transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.capability-card:hover .capability-card__detail,
+.capability-card:focus-within .capability-card__detail {
+  max-height: 96px; opacity: 1; transform: translateY(0); margin-top: .9rem;
+}
+.capability-card__hint {
+  display: inline-flex; align-items: center; gap: .45rem; margin-top: 1.1rem;
+  font-size: .8rem; font-weight: 750; letter-spacing: .02em; color: var(--signal);
+  opacity: 0; transform: translateX(-8px);
+  transition: opacity .4s ease, transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.capability-card:hover .capability-card__hint,
+.capability-card:focus-within .capability-card__hint { opacity: 1; transform: translateX(0); }
+.capability-card__hint svg { transition: transform .4s ease; }
+.capability-card:hover .capability-card__hint svg,
+.capability-card:focus-within .capability-card__hint svg { transform: translateX(5px); }
