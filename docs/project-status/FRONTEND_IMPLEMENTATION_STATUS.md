@@ -155,6 +155,23 @@ Completed in current working session. Replaced AI-draft labels with a complete i
 - Sandbox safe-delete guard: Playwright's pre-run cleanup of `test-results` (50+ files) triggers `SAFE_DELETE_BULK_CONFIRM_REQUIRED`; worked around by `mv test-results test-results.bak` so Playwright starts from an empty dir. Do not `rm -rf` test artifacts here.
 - Final integration choice after commit: merge locally, open a pull request, or preserve the branch (per visual-refresh plan constraint: no push/PR within this plan).
 
+## Plan 2 Backend — Logic-First Foundation (committed locally)
+
+Began Plan 2 (RFQ/Supabase/Admin) with a **logic-first slice**: only the pure domain-logic + Zod contract modules that need zero external infrastructure, built TDD using the `fullstack-dev` and `tdd` skills. These run and pass in the sandbox.
+
+Committed on branch `agent/public-website-foundation` (no push / no PR per sub-plan):
+
+- `1dc1076` RFQ submission contract (`rfqSchema`, Zod) — Task 5 slice
+- `3fac19d` product publication rules (`getPublicationIssues`) — Task 4 slice
+- `1aab893` artwork file policy (`validateFileDescriptor` / `validateAggregateSize`) — Task 6 slice
+- `abd97da` inquiry lifecycle state machine (`canTransition` / `validateTransition`) — Task 9 slice
+- `9836035` safe CSV export (UTF-8 BOM + formula-injection escape) — Task 10 slice
+- `bbad8b1` rate-limit HMAC key derivation (no raw IP/email persisted) — Task 7 slice
+
+Verification this session: `npx vitest run` ⇒ **49/49 passed** (was 16); `tsc --noEmit` clean.
+
+Environment reality (must not be glossed over): the remaining Plan 2 tasks require Supabase (Docker), Resend, and Cloudflare Turnstile — none available in this sandbox (network disabled) or on the user's Mac (no pnpm/Docker/Supabase CLI; `@supabase/*`, `react-hook-form`, `resend` not installed). Full-stack tasks (schema/RLS, SSR auth, catalog repo, wizard UI, uploads, inquiry creation, notifications, admin UI, security gate) are deferred until a provisioned environment exists. User chose logic-first over provisioning infra first.
+
 ## Resume Checklist
 
 1. Read this file, the approved PRD, and the public website implementation plan.
