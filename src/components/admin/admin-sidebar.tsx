@@ -1,18 +1,21 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation'
 import { LayoutDashboard, FileText, Boxes, Inbox, Settings } from 'lucide-react'
 
 const items = [
-  { key: 'navDashboard', href: '#', icon: LayoutDashboard },
-  { key: 'navRfq', href: '#', icon: FileText },
-  { key: 'navProducts', href: '#', icon: Boxes },
-  { key: 'navInquiries', href: '#', icon: Inbox },
-  { key: 'navSettings', href: '#', icon: Settings },
+  { key: 'navDashboard', segment: '/admin', icon: LayoutDashboard },
+  { key: 'navRfq', segment: '/admin/rfq', icon: FileText },
+  { key: 'navProducts', segment: '/admin/products', icon: Boxes },
+  { key: 'navInquiries', segment: '/admin/inquiries', icon: Inbox },
+  { key: 'navSettings', segment: '/admin/settings', icon: Settings },
 ] as const
 
 export function AdminSidebar() {
   const t = useTranslations('admin')
+  const locale = useLocale()
+  const pathname = usePathname()
   const consoleWord = t('consoleName').replace('WIZ ', '')
 
   return (
@@ -25,8 +28,15 @@ export function AdminSidebar() {
       <nav className="admin-nav" aria-label={t('consoleName')}>
         {items.map((item) => {
           const Icon = item.icon
+          const href = `/${locale}${item.segment}`
+          const active = pathname === `/${locale}${item.segment}`
           return (
-            <a key={item.key} href={item.href} className="admin-nav__item">
+            <a
+              key={item.key}
+              href={href}
+              className={`admin-nav__item${active ? ' is-active' : ''}`}
+              aria-current={active ? 'page' : undefined}
+            >
               <Icon aria-hidden="true" size={18} />
               <span>{t(item.key)}</span>
             </a>
