@@ -1,22 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useActionState } from 'react'
 import { useTranslations } from 'next-intl'
 import { LogIn } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-
-type Status = 'idle' | 'submitting' | 'wiring'
+import { login, type AuthState } from '@/features/auth/actions'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export function LoginForm() {
+export function LoginForm({ locale }: { locale: 'en' | 'ja' | 'zh-CN' }) {
   const t = useTranslations('auth')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(true)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
-  const [status, setStatus] = useState<Status>('idle')
+  const [state, formAction, pending] = useActionState<AuthState, FormData>(login, {
+    error: undefined,
+  })
 
   function validateEmail(value: string): string | undefined {
     if (!value.trim()) return t('errorEmail')
@@ -38,19 +38,17 @@ export function LoginForm() {
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
     const emailErr = validateEmail(email)
     const passwordErr = validatePassword(password)
     setErrors({ email: emailErr, password: passwordErr })
-    if (emailErr || passwordErr) return
-    setStatus('submitting')
-    window.setTimeout(() => setStatus('wiring'), 1100)
+    // Block the server action when client-side validation fails.
+    if (emailErr || passwordErr) event.preventDefault()
   }
 
-  const submitting = status === 'submitting'
-
   return (
-    <form className="auth-form" onSubmit={handleSubmit} noValidate>
+    <form className="auth-form" action={formAction} onSubmit={handleSubmit} noValidate>
+      <input type="hidden" name="locale" value={locale} />
+
       <div className={`field${errors.email ? ' field--invalid' : ''}`}>
         <label className="field__label" htmlFor="auth-email">{t('emailLabel')}</label>
         <input
@@ -65,9 +63,11 @@ export function LoginForm() {
           onBlur={handleBlurEmail}
           aria-invalid={errors.email ? true : undefined}
           aria-describedby={errors.email ? 'auth-email-error' : undefined}
-          disabled={submitting}
+          disabled={pending}
         />
-        {errors.email ? <p className="field__error" id="auth-email-error">{errors.email}</p> : null}
+        {errors.email ? (
+          <p className="field__error" id="auth-email-error">{errors.email}</p>
+        ) : null}
       </div>
 
       <div className={`field${errors.password ? ' field--invalid' : ''}`}>
@@ -84,32 +84,35 @@ export function LoginForm() {
           onBlur={handleBlurPassword}
           aria-invalid={errors.password ? true : undefined}
           aria-describedby={errors.password ? 'auth-password-error' : undefined}
-          disabled={submitting}
+          disabled={pending}
         />
-        {errors.password ? <p className="field__error" id="auth-password-error">{errors.password}</p> : null}
+        {errors.password ? (
+          <p className="field__error" id="auth-password-error">{errors.password}</p>
+        ) : null}
       </div>
 
       <div className="auth-row">
         <label className="checkbox">
-          <input
-            type="checkbox"
-            checked={remember}
-            onChange={(event) => setRemember(event.target.checked)}
-            disabled={submitting}
-          />
+          <input type="checkbox" defaultChecked disabled={pending} />
           <span>{t('remember')}</span>
         </label>
         <a className="auth-link" href="#">{t('forgot')}</a>
       </div>
 
-      <Button type="submit" variant="primary" className="auth-submit" disabled={submitting} aria-busy={submitting}>
-        {submitting ? t('submitting') : t('submit')}
-        {submitting ? null : <LogIn aria-hidden="true" size={16} />}
-      </Button>
-
-      {status === 'wiring' ? (
-        <p className="auth-hint" role="status">{t('wiringNote')}</p>
+      {state.error ? (
+        <p className="field__error" role="alert">{t('errorGeneric')}</p>
       ) : null}
+
+      <Button
+        type="submit"
+        variant="primary"
+        className="auth-submit"
+        disabled={pending}
+        aria-busy={pending}
+      >
+        {pending ? t('submitting') : t('submit')}
+        {pending ? null : <LogIn aria-hidden="true" size={16} />}
+      </Button>
     </form>
   )
 }

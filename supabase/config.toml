@@ -1,0 +1,49 @@
+# WIZ local Supabase configuration (Plan 2 / Task 1)
+# Usage: `supabase init` is not needed once this file exists. Start with `supabase start`.
+project_id = "wiz-corporate-website"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+
+[analytics]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1:54321"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000"]
+jwt_expiry = 3600
+enable_signup = true
+# WIZ accounts are invite/internal only; disable public passwordless/anon flows below.
+enable_anonymous_sign_ins = false
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[realtime]
+enabled = true

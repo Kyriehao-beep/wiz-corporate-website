@@ -36,7 +36,7 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
           <p className="eyebrow">{t('subheading')}</p>
           <h1 className="auth-card__title">{t('heading')}</h1>
           <p className="auth-card__desc">{t('description')}</p>
-          <LoginForm />
+          <LoginForm locale={locale} />
           <a className="auth-back" href={homeHref}>
             <ArrowLeft aria-hidden="true" size={14} />
             {t('backToSite')}
