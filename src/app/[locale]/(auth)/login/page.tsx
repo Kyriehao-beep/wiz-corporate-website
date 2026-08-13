@@ -27,10 +27,8 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
           <span className="auth-aside__name">WIZ</span>
         </div>
         <div className="auth-aside__body">
-          <p className="auth-aside__statement">{t('brandStatement')}</p>
           <p className="auth-aside__note">{t('brandNote')}</p>
         </div>
-        <span className="auth-aside__patch" aria-hidden="true" />
       </aside>
 
       <div className="auth-main">
