@@ -19,6 +19,32 @@ alter table public.notification_queue       enable row level security;
 alter table public.notification_deliveries  enable row level security;
 alter table public.audit_log                enable row level security;
 
+-- ── Table-level grants (RLS policies control WHICH rows; grants control IF you can query) ──
+-- Public catalog: anon + authenticated can read; authenticated can write.
+grant select on public.products               to anon, authenticated;
+grant select on public.product_translations   to anon, authenticated;
+grant select on public.product_media          to anon, authenticated;
+grant select on public.applications           to anon, authenticated;
+grant select on public.application_translations to anon, authenticated;
+grant select on public.application_media      to anon, authenticated;
+grant select on public.product_applications  to anon, authenticated;
+grant insert, update on public.products                to authenticated;
+grant insert, update on public.product_translations    to authenticated;
+grant insert, update on public.product_media           to authenticated;
+grant insert, update on public.applications             to authenticated;
+grant insert, update on public.application_translations to authenticated;
+grant insert, update on public.application_media        to authenticated;
+grant insert, update on public.product_applications     to authenticated;
+
+-- Member-only tables: authenticated only (anon has zero access).
+grant select, insert, update on public.profiles          to authenticated;
+grant select, insert, update on public.inquiries         to authenticated;
+grant select, insert, update on public.inquiry_items      to authenticated;
+grant select, insert, update on public.inquiry_activities to authenticated;
+grant select, insert, update on public.upload_drafts     to authenticated;
+
+-- Service-role-only tables: no client grants at all (service role is superuser).
+
 -- ── profiles (unified WIZ account) ──
 create policy "profiles_self_read" on public.profiles
   for select using (auth.uid() = id);
