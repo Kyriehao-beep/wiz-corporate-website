@@ -167,6 +167,8 @@
     "inquiryCompany": "Company",
     "inquiryProduct": "Product",
     "inquiryValue": "Value",
+    "inquiryCreatedAt": "Created",
+    "inquiriesEmpty": "No inquiries yet. Submissions from the RFQ form will appear here.",
     "inquiryOpen": "Open",
     "prodCoreFields": "Core fields",
     "prodFieldSlug": "Slug",

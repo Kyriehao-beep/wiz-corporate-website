@@ -167,6 +167,8 @@
     "inquiryCompany": "公司",
     "inquiryProduct": "产品",
     "inquiryValue": "金额",
+    "inquiryCreatedAt": "创建时间",
+    "inquiriesEmpty": "暂无询盘。RFQ 表单提交的询盘会显示在这里。",
     "inquiryOpen": "打开",
     "prodCoreFields": "核心字段",
     "prodFieldSlug": "Slug",

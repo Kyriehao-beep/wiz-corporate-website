@@ -167,6 +167,8 @@
     "inquiryCompany": "会社名",
     "inquiryProduct": "製品",
     "inquiryValue": "金額",
+    "inquiryCreatedAt": "作成日",
+    "inquiriesEmpty": "まだ引き合いはありません。RFQ フォームからの送信がここに表示されます。",
     "inquiryOpen": "開く",
     "prodCoreFields": "基本項目",
     "prodFieldSlug": "スラッグ",

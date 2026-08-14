@@ -95,6 +95,18 @@ export async function saveProductAction(
   _prev: ProductFormState,
   formData: FormData,
 ): Promise<ProductFormState> {
+  try {
+    return await saveProductImpl(formData)
+  } catch (err) {
+    // Catch ANY unexpected throw (incl. framework/SDK errors we didn't anticipate)
+    // and surface the real message instead of a generic "Invalid input".
+    console.error('[saveProductAction] UNEXPECTED throw:', err)
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: 'save_failed', message: `Unexpected error: ${msg}` }
+  }
+}
+
+async function saveProductImpl(formData: FormData): Promise<ProductFormState> {
   const locale = (formData.get('locale') as WizLocale) ?? 'en'
   const mode = (formData.get('mode') as 'create' | 'edit') ?? 'create'
   const originalSlug = (formData.get('originalSlug') as string) ?? ''
@@ -150,6 +162,9 @@ export async function saveProductAction(
       await repo.createProduct(input, profile.id)
     }
   } catch (err) {
+    // Surface the raw database error server-side too — the UI only shows `msg`,
+    // but the full error object (including the Postgres column/type) lands here.
+    console.error('[saveProductAction] product save failed:', err)
     const msg = err instanceof Error ? err.message : 'Unknown error'
     return { error: 'save_failed', message: `Could not save product: ${msg}` }
   }

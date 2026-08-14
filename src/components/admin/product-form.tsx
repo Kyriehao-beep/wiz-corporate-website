@@ -36,7 +36,7 @@ export function ProductForm({ locale, mode, originalSlug, initial, applications 
   const [state, formAction] = useActionState<ProductFormState, FormData>(saveProductAction, {})
 
   return (
-    <form action={formAction} className="admin-form">
+    <form action={formAction} className="admin-form" noValidate>
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="mode" value={mode} />
       {mode === 'edit' && originalSlug ? (
