@@ -76,7 +76,11 @@ export async function submitRfqAction(
     return { error: 'bot_check' }
   }
 
-  const result = await submitInquiry(payload, { ip, rateLimitSecret })
+  // Collect artwork files (web File satisfies the UploadFile contract).
+  const fileEntries = formData.getAll('artwork').filter((f): f is File => f instanceof File)
+  const files = fileEntries.length > 0 ? fileEntries : undefined
+
+  const result = await submitInquiry(payload, { ip, rateLimitSecret, files })
   if (!result.ok) {
     const map: Record<typeof result.error, RfqFormState['error']> = {
       invalid_input: 'invalid_input',

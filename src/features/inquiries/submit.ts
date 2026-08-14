@@ -4,6 +4,7 @@ import { rfqSchema, type RfqInput } from '@/features/rfq/schema'
 import { hashIdentifier } from '@/lib/security/rate-limit'
 import { createServiceClient } from '@/lib/supabase/service'
 
+import { linkAttachments, uploadFilesToStorage, type AttachmentMeta, type UploadFile } from './attachments'
 import { buildInquiryPayload, generateInquiryNumber } from './rfq-mapping'
 import { checkAndIncrementRateLimit } from './rate-limit-enforcement'
 
@@ -23,6 +24,8 @@ export interface SubmitContext {
   /** Reuse a client-supplied idempotency key to make retries safe. */
   idempotencyKey?: string
   rateLimit?: { limit?: number; windowSec?: number; bucket?: string }
+  /** Artwork files collected by the wizard (uploaded to private storage, linked to the new inquiry). */
+  files?: UploadFile[]
 }
 
 const RFQ_BUCKET = 'rfq_submit'
@@ -64,6 +67,18 @@ export async function submitInquiry(
     return { ok: false, error: 'rate_limited' }
   }
 
+  // Upload artwork BEFORE creating the inquiry so a storage failure aborts cleanly
+  // (no orphaned inquiry row). Uploads are skipped entirely when no files are attached.
+  let attachmentMetas: AttachmentMeta[] = []
+  if (ctx.files && ctx.files.length > 0) {
+    try {
+      attachmentMetas = await uploadFilesToStorage(client, ctx.files)
+    } catch (err) {
+      console.error('[submitInquiry] attachment upload failed', err)
+      return { ok: false, error: 'persistence_failed' }
+    }
+  }
+
   const idempotencyKey = ctx.idempotencyKey ?? randomUUID()
   const inquiryNumber = generateInquiryNumber(now)
   const { inquiry, items } = buildInquiryPayload(rfq, { idempotencyKey, inquiryNumber, now })
@@ -89,6 +104,14 @@ export async function submitInquiry(
     activity_type: 'created',
     payload: { source: inquiry.source, locale: inquiry.locale },
   })
+
+  if (attachmentMetas.length > 0) {
+    try {
+      await linkAttachments(client, inserted.id, attachmentMetas)
+    } catch (err) {
+      console.error('[submitInquiry] failed to link attachments', err)
+    }
+  }
 
   return { ok: true, inquiryId: inserted.id, inquiryNumber }
 }

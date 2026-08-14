@@ -66,6 +66,8 @@
     "errorRateLimited": "送信回数が多すぎます。時間をおいて再度お試しください。",
     "errorGeneric": "エラーが発生しました。再度お試しください。",
     "errorBotCheck": "送信前にセキュリティチェックを完了してください。",
+    "artworkLabel": "添付データ（任意）",
+    "artworkHint": "JPG・PNG・PDF・AI・EPS・SVG。最大5ファイル、各20MB。",
     "product": {
       "customPvc": "カスタムPVCラバーパッチ",
       "embroidered": "刺繍パッチ",

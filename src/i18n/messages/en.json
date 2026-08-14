@@ -66,6 +66,8 @@
     "errorRateLimited": "Too many submissions. Please try again later.",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorBotCheck": "Please complete the security check before submitting.",
+    "artworkLabel": "Attach artwork (optional)",
+    "artworkHint": "JPG, PNG, PDF, AI, EPS or SVG. Up to 5 files, 20 MB each.",
     "product": {
       "customPvc": "Custom PVC rubber patches",
       "embroidered": "Embroidered patches",

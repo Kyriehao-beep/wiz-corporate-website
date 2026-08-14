@@ -190,6 +190,19 @@ export function RfqWizard({ locale }: { locale: 'en' | 'ja' | 'zh-CN' }) {
           <textarea id="rfq-project" name="projectDescription" rows={6} className="field__input" placeholder={t('projectPlaceholder')} disabled={pending} />
           {errors.projectDescription ? <p className="field__error">{errors.projectDescription}</p> : null}
         </div>
+
+        <fieldset className="field field--wide">
+          <legend className="field__label">{t('artworkLabel')}</legend>
+          <input
+            type="file"
+            name="artwork"
+            multiple
+            accept=".jpg,.jpeg,.png,.pdf,.ai,.eps,.svg"
+            className="field__input"
+            disabled={pending}
+          />
+          <p className="field__hint">{t('artworkHint')}</p>
+        </fieldset>
       </div>
 
       <label className={`checkbox${errors.privacyAccepted ? ' field--invalid' : ''}`}>

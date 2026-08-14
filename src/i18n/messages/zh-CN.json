@@ -66,6 +66,8 @@
     "errorRateLimited": "提交过于频繁,请稍后再试。",
     "errorGeneric": "出现错误,请重试。",
     "errorBotCheck": "请在提交前完成安全验证。",
+    "artworkLabel": "上传设计稿（选填）",
+    "artworkHint": "支持 JPG、PNG、PDF、AI、EPS 或 SVG，最多 5 个文件，每个 20 MB。",
     "product": {
       "customPvc": "定制 PVC 橡胶补丁",
       "embroidered": "刺绣补丁",
