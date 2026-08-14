@@ -31,6 +31,7 @@ create table public.products (
   slug         text unique not null check (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'),
   status       public.content_status not null default 'draft',
   display_order integer not null default 0,
+  tone         text not null default 'forest',
   created_by   uuid references auth.users(id),
   updated_by   uuid references auth.users(id),
   created_at   timestamptz not null default now(),
@@ -64,6 +65,8 @@ create table public.applications (
   id           uuid primary key default gen_random_uuid(),
   slug         text unique not null check (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'),
   display_order integer not null default 0,
+  tone         text not null default 'forest',
+  priority     boolean not null default false,
   created_at   timestamptz not null default now()
 );
 

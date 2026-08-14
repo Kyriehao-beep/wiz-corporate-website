@@ -1,27 +1,12 @@
 -- 202608130001_catalog_editorial_fields.sql
--- Plan 2 (Task 3) — model the rich editorial catalog fields that were
--- previously fixture-only, so the Supabase-backed repository returns full
--- product/application detail instead of defaulted (thin) content.
+-- Plan 2 (Task 3) — add rich editorial fields to catalog translation tables
+-- and give them surrogate uuid primary keys (required by Supabase seed runner).
 --
--- Design rule:
---   * Per-language editorial content  -> the *_translations tables.
---   * Language-neutral presentation      -> the base products / applications tables.
---     (tone = visual design token, priority = ordering flag; both are the same
---      across locales, matching fixtures where application tone is a single value.)
---
--- NOTE: this migration also adds a surrogate `id` (uuid) primary key to both
--- translation tables. The original schema used a composite PK (parent_id, locale)
--- which works fine for SQL but causes Supabase's seed runner to fail with
--- "column id not found" because it expects a single-column serial/uuid PK on
--- every table. The composite uniqueness is preserved as a UNIQUE constraint.
---
--- Reversible: every added column/constraint is dropped in the down section.
+-- Base-table columns (products.tone, applications.tone, applications.priority)
+-- are defined directly in 202608120001_core_schema.sql so they always exist.
+-- This migration only touches the *_translations tables.
 
--- ── products: language-neutral visual token ──────────────
-alter table public.products
-  add column tone text not null default 'forest';
-
--- ── product_translations: per-language editorial fields + surrogate PK ──
+-- ── product_translations: editorial fields + surrogate PK ──────
 alter table public.product_translations
   add column id uuid not null default gen_random_uuid(),
   add column eyebrow text not null default '',
@@ -36,12 +21,7 @@ alter table public.product_translations
   add primary key (id),
   add constraint product_translations_locale_unique unique (product_id, locale);
 
--- ── applications: language-neutral tone + priority ───────
-alter table public.applications
-  add column tone text not null default 'forest',
-  add column priority boolean not null default false;
-
--- ── application_translations: per-language editorial fields + surrogate PK
+-- ── application_translations: editorial fields + surrogate PK ──
 alter table public.application_translations
   add column id uuid not null default gen_random_uuid(),
   add column buyer_problem text not null default '',
@@ -53,7 +33,7 @@ alter table public.application_translations
   add primary key (id),
   add constraint application_translations_locale_unique unique (application_id, locale);
 
--- ── Down migration ───────────────────────────────────────
+-- ── Down migration ───────────────────────────────────────────
 alter table public.application_translations
   drop constraint if exists application_translations_locale_unique,
   drop constraint if exists application_translations_pkey,
@@ -63,9 +43,6 @@ alter table public.application_translations
   drop column id;
 alter table public.application_translations
   add primary key (application_id, locale);
-alter table public.applications
-  drop column priority,
-  drop column tone;
 alter table public.product_translations
   drop constraint if exists product_translations_locale_unique,
   drop constraint if exists product_translations_pkey,
@@ -78,5 +55,3 @@ alter table public.product_translations
   drop column id;
 alter table public.product_translations
   add primary key (product_id, locale);
-alter table public.products
-  drop column tone;
