@@ -17,6 +17,7 @@ import {
 import {
   addInquiryNoteAction,
   assignInquiryAction,
+  recordContactAction,
   updateInquiryStatusAction,
 } from '@/features/inquiries/admin-actions'
 import { createServiceClient } from '@/lib/supabase/service'
@@ -202,6 +203,24 @@ export default async function InquiryDetailPage({
               <label className="op-form__row">
                 <span>{t('inquiryNoteHint')}</span>
                 <textarea name="note" rows={3} required />
+              </label>
+              <button type="submit" className="admin-btn">{t('inquiryApply')}</button>
+            </form>
+
+            <form action={recordContactAction} className="op-form">
+              <p className="op-form__label">{t('inquiryRecordContact')}</p>
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="id" value={detail.id} />
+              <label className="op-form__row">
+                <span>{t('inquiryContactChannel')}</span>
+                <select name="channel" defaultValue="email">
+                  <option value="email">{t('inquiryContactEmail')}</option>
+                  <option value="phone">{t('inquiryContactPhone')}</option>
+                </select>
+              </label>
+              <label className="op-form__row">
+                <span>{t('inquiryContactNote')}</span>
+                <textarea name="note" rows={2} required />
               </label>
               <button type="submit" className="admin-btn">{t('inquiryApply')}</button>
             </form>

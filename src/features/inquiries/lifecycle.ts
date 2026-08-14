@@ -35,8 +35,13 @@ export function validateTransition(command: TransitionCommand): TransitionResult
   if (!canTransition(command.from, command.to)) {
     return { success: false, error: `Cannot move inquiry from ${command.from} to ${command.to}` }
   }
-  if (command.to === 'closed' && !command.reason?.trim()) {
-    return { success: false, error: 'A closure reason is required' }
+  const isClosing = command.to === 'closed'
+  const isReopening = command.from === 'closed' && command.to !== 'closed'
+  if ((isClosing || isReopening) && !command.reason?.trim()) {
+    return {
+      success: false,
+      error: isClosing ? 'A closure reason is required' : 'A reopen note is required',
+    }
   }
   return { success: true }
 }

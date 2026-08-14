@@ -17,6 +17,10 @@ describe('inquiry lifecycle', () => {
     expect(validateTransition({ from: 'quoted', to: 'closed', reason: '' }).success).toBe(false)
   })
 
+  it('requires a reopen note', () => {
+    expect(validateTransition({ from: 'closed', to: 'contacted', reason: '' }).success).toBe(false)
+  })
+
   it('rejects a disallowed transition', () => {
     expect(canTransition('new', 'won')).toBe(false)
     expect(validateTransition({ from: 'new', to: 'won' }).success).toBe(false)

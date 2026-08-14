@@ -4,15 +4,24 @@ import { revalidatePath } from 'next/cache'
 
 import { requireAdmin, type WizLocale } from '@/features/auth/require-admin'
 import { createServiceClient } from '@/lib/supabase/service'
+import { isLocale } from '@/i18n/locales'
 import { validateTransition, INQUIRY_STATUSES, type InquiryStatus } from './lifecycle'
+
+/** Resolve the locale hidden input into a safe value; never trust client input blindly. */
+function readLocale(formData: FormData): WizLocale {
+  const raw = String(formData.get('locale') ?? 'en')
+  return isLocale(raw) ? raw : 'en'
+}
 
 /**
  * Transition an inquiry's status. Guard-railed by `validateTransition` (pure,
- * TDD) so illegal moves and closure-without-reason are rejected before any write.
- * Returns void — failures are logged; the page re-renders via revalidatePath.
+ * TDD) so illegal moves and closure/reopen-without-reason are rejected. The
+ * `.eq('status', from)` clause pins the update to the *persisted* status, so a
+ * forged `from` cannot skip the lifecycle. Returns void — failures are logged;
+ * the page re-renders via revalidatePath.
  */
 export async function updateInquiryStatusAction(formData: FormData): Promise<void> {
-  const locale = (formData.get('locale') as WizLocale) ?? 'en'
+  const locale = readLocale(formData)
   const id = String(formData.get('id') ?? '')
   const from = formData.get('from') as InquiryStatus
   const to = formData.get('to') as InquiryStatus
@@ -32,12 +41,17 @@ export async function updateInquiryStatusAction(formData: FormData): Promise<voi
   }
 
   const client = createServiceClient()
-  const { error } = await client
+  const { error, count } = await client
     .from('inquiries')
-    .update({ status: to, updated_at: new Date().toISOString() })
+    .update({ status: to, updated_at: new Date().toISOString() }, { count: 'exact' })
     .eq('id', id)
+    .eq('status', from)
   if (error) {
     console.error('[admin] status update failed', error.message)
+    return
+  }
+  if ((count ?? 0) === 0) {
+    console.warn('[admin] status update: persisted status did not match, no rows updated')
     return
   }
   await client.from('inquiry_activities').insert({
@@ -51,7 +65,7 @@ export async function updateInquiryStatusAction(formData: FormData): Promise<voi
 
 /** Assign (or unassign with an empty value) the inquiry owner. */
 export async function assignInquiryAction(formData: FormData): Promise<void> {
-  const locale = (formData.get('locale') as WizLocale) ?? 'en'
+  const locale = readLocale(formData)
   const id = String(formData.get('id') ?? '')
   const ownerId = String(formData.get('ownerId') ?? '').trim() || null
   if (!id) return
@@ -77,7 +91,7 @@ export async function assignInquiryAction(formData: FormData): Promise<void> {
 
 /** Append an internal note (never customer-visible). */
 export async function addInquiryNoteAction(formData: FormData): Promise<void> {
-  const locale = (formData.get('locale') as WizLocale) ?? 'en'
+  const locale = readLocale(formData)
   const id = String(formData.get('id') ?? '')
   const note = String(formData.get('note') ?? '').trim()
   if (!id || !note) return
@@ -92,6 +106,33 @@ export async function addInquiryNoteAction(formData: FormData): Promise<void> {
   })
   if (error) {
     console.error('[admin] note insert failed', error.message)
+    return
+  }
+  revalidatePath(`/${locale}/admin/inquiries/${id}`)
+}
+
+/** Record an outbound/inbound email or phone contact attempt (audit only). */
+export async function recordContactAction(formData: FormData): Promise<void> {
+  const locale = readLocale(formData)
+  const id = String(formData.get('id') ?? '')
+  const channel = String(formData.get('channel') ?? '').trim()
+  const note = String(formData.get('note') ?? '').trim()
+  if (!id || !note) return
+  if (channel !== 'email' && channel !== 'phone') {
+    console.warn('[admin] contact: invalid channel rejected')
+    return
+  }
+
+  await requireAdmin(locale)
+
+  const client = createServiceClient()
+  const { error } = await client.from('inquiry_activities').insert({
+    inquiry_id: id,
+    activity_type: 'contact',
+    payload: { channel, note },
+  })
+  if (error) {
+    console.error('[admin] contact insert failed', error.message)
     return
   }
   revalidatePath(`/${locale}/admin/inquiries/${id}`)

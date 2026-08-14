@@ -1,5 +1,6 @@
 import type { PostgrestFilterBuilder, SupabaseClient } from '@supabase/supabase-js'
 import type { Locale } from '@/i18n/locales'
+import type { InquiryStatus } from './lifecycle'
 
 /**
  * Inquiry read models and query builders for the admin console (Plan Task 9).
@@ -12,7 +13,7 @@ import type { Locale } from '@/i18n/locales'
  * brought up per the local Supabase runbook (item 3).
  */
 
-export type InquiryStatus = 'new' | 'contacted' | 'quoted' | 'won' | 'closed'
+export type { InquiryStatus }
 
 export interface InquiryFilters {
   inquiryNumber?: string
