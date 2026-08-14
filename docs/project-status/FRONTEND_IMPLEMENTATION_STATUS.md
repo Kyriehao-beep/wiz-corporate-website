@@ -192,7 +192,8 @@ User approved extending the catalog schema so the Supabase-backed repository ret
   - `applications.tone` + `priority boolean`, `application_translations` adds `buyer_problem`, `attachment_considerations`, `visual_direction`.
   - Design rule: per-language editorial content → `*_translations`; language-neutral `tone`/`priority` → base tables. Reversible (down section drops every column).
 - `src/features/catalog/supabase-catalog-repository.ts`: row types + mappers updated to read the new columns; `artwork_guidance` falls back to `body` when empty (backward-compatible); `getApplicationBySlug` recommended slugs now derive via `product_applications(products!product_applications_product_id_fkey(slug))`; SELECT lists fetch `tone`/`priority`/`eyebrow`.
-- `supabase-catalog-repository.test.ts`: fixtures + assertions extended for all new fields (incl. body-fallback + slug derivation). Catalog suite **19/19**, full suite **90/90**, `tsc --noEmit` clean, `next build --webpack` pending/verified.
+- `supabase-catalog-repository.test.ts`: fixtures + assertions extended for all new fields (incl. body-fallback + slug derivation). Catalog suite **19/19**, full suite **90/90**, `tsc --noEmit` clean, `next build --webpack` verified.
+- `supabase/seed.sql` (enriched): now populates the new editorial columns for all 3 products × 3 locales and 3 applications × 3 locales (plus `tone`/`priority` on base rows). A fresh `supabase db reset` therefore yields a RICH catalog, so item 3's local validation actually proves the extension instead of falling back to thin content. `docs/setup/local-supabase-runbook.md` synced: notes the 4th migration auto-applies and adds product/application detail validation rows.
 
 Next: user brings up Supabase per `docs/setup/local-supabase-runbook.md`, then validate the end-to-end submission + admin query + catalog detail path and report errors back for fixes.
 

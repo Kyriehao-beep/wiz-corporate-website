@@ -75,8 +75,8 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...本地service_role...
 supabase db reset
 ```
 
-- 这会清空本地库后重新跑全部 migration（核心 schema → RLS+storage → audit 触发器）再灌 seed。
-- seed 含 3 个 product × EN/JA/ZH、3 个 application，便于后台直接看到数据。
+- 这会清空本地库后按文件名顺序重新跑全部 migration（`202608120001` 核心 schema → `002` RLS+storage → `003` audit 触发器 → `202608130001` 目录富编辑字段）再灌 seed。新增的 catalog 迁移会自动被拾起，无需手动干预。
+- seed 含 3 个 product × EN/JA/ZH、3 个 application，且**现已写入富编辑字段**（eyebrow / suitability / construction / visual_options / attachment_options / artwork_guidance / buyer_problem / attachment_considerations / visual_direction，以及基表的 tone / priority）。`supabase db reset` 之后目录即为富内容，可直接验证本次 schema 扩展是否生效——不必再靠 fixture 兜底。
 - **注意**：seed 不创建任何用户——账号要下一步手动建。
 
 可选单独跑：`supabase migration up` 后再 `supabase db seed`。
@@ -123,6 +123,8 @@ npm run dev
 | `/zh-CN/login` 用刚建的账号登录 | 成功后跳 `/zh-CN/admin`，看到后台外壳 |
 | `/zh-CN/login` 填错密码 | 表单显示通用错误（`auth.errorGeneric`），不泄露具体原因 |
 | 已登录再访问 `/zh-CN/login` | 重定向到 `/zh-CN/admin` |
+| 访问 `/zh-CN/products/custom-pvc-rubber-patches`（默认走 Supabase 仓储） | 页面显示 eyebrow、suitability / construction / visualOptions / attachmentOptions 列表、artworkGuidance 正文，而非空白或 fixture 兜底 |
+| 访问 `/zh-CN/applications/apparel` | 页面显示 buyerProblem、recommendedProductSlugs、attachmentConsiderations、visualDirection |
 
 ---
 
