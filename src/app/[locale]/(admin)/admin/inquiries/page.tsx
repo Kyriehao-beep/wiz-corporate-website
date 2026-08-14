@@ -51,6 +51,9 @@ export default async function InquiriesPage({ params }: { params: Promise<{ loca
       <header className="admin-page__head">
         <h2 className="admin-page__title">{t('inquiriesTitle')}</h2>
         <p className="admin-page__intro">{t('inquiriesIntro')}</p>
+        <a className="admin-btn admin-btn--ghost" href={`/${locale}/api/admin/inquiries/export`}>
+          {t('inquiryExportCsv')}
+        </a>
       </header>
 
       {rows.length === 0 ? (

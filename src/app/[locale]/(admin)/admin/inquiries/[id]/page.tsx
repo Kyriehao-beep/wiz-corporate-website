@@ -11,7 +11,9 @@ import {
 import {
   getInquiryAttachments,
   getInquiryDetail,
+  getInquiryQuotes,
   type InquiryDetail,
+  type InquiryQuoteView,
   type InquiryStatus as DetailStatus,
 } from '@/features/inquiries/query-inquiries'
 import {
@@ -20,6 +22,8 @@ import {
   recordContactAction,
   updateInquiryStatusAction,
 } from '@/features/inquiries/admin-actions'
+import { recordQuoteAction } from '@/features/inquiries/quote-actions'
+import { setFollowUpAction } from '@/features/inquiries/follow-up-actions'
 import { createServiceClient } from '@/lib/supabase/service'
 import { isLocale } from '@/i18n/locales'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -38,6 +42,15 @@ export async function generateMetadata({
 
 function statusLabelKey(status: DetailStatus): string {
   return `inquiryStatus${status.charAt(0).toUpperCase()}${status.slice(1)}`
+}
+
+/** Map a snake_case activity_type enum value to its i18n key (e.g. status_change → inquiryActivityStatusChange). */
+function activityLabelKey(type: string): string {
+  const pascal = type
+    .split('_')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
+  return `inquiryActivity${pascal}`
 }
 
 function formatDateTime(iso: string, locale: WizLocale): string {
@@ -69,9 +82,13 @@ export default async function InquiryDetailPage({
   const client = createServiceClient()
   let detail: InquiryDetail | null = null
   let attachments: Awaited<ReturnType<typeof getInquiryAttachments>> = []
+  let quotes: InquiryQuoteView[] = []
   try {
     detail = await getInquiryDetail(id, client)
-    if (detail) attachments = await getInquiryAttachments(id, client)
+    if (detail) {
+      attachments = await getInquiryAttachments(id, client)
+      quotes = await getInquiryQuotes(id, client)
+    }
   } catch (err) {
     console.error('[inquiry-detail] failed to load', err)
   }
@@ -120,6 +137,9 @@ export default async function InquiryDetailPage({
             <div><dt>{t('inquirySourceLabel')}</dt><dd>{detail.source}</dd></div>
             <div><dt>{t('inquiryOwnerLabel')}</dt><dd>{detail.ownerId ?? t('inquiryUnassigned')}</dd></div>
             <div><dt>{t('inquiryCreatedAt')}</dt><dd>{formatDateTime(detail.createdAt, locale)}</dd></div>
+            {detail.nextFollowUpAt ? (
+              <div><dt>{t('inquiryNextFollowUp')}</dt><dd>{formatDateTime(detail.nextFollowUpAt, locale)}</dd></div>
+            ) : null}
           </dl>
 
           <h3 className="detail-card__title">{t('inquiryProjectLabel')}</h3>
@@ -147,11 +167,51 @@ export default async function InquiryDetailPage({
             <ul className="detail-items">
               {attachments.map((a) => (
                 <li key={a.id}>
-                  {a.displayName} <span className="detail-muted">({formatBytes(a.sizeBytes)})</span>
+                  <a href={`/${locale}/api/admin/files/${a.id}`} className="detail-link" download>
+                    {a.displayName}
+                  </a>{' '}
+                  <span className="detail-muted">({formatBytes(a.sizeBytes)}) · {t('inquiryDownload')}</span>
                 </li>
               ))}
             </ul>
           )}
+
+          <h3 className="detail-card__title">{t('inquiryQuoteLabel')}</h3>
+          {quotes.length === 0 ? (
+            <p className="detail-muted">{t('inquiryNoQuotes')}</p>
+          ) : (
+            <ul className="detail-items">
+              {quotes.map((q) => (
+                <li key={q.id}>
+                  {q.currency} {q.amount.toFixed(2)} · {q.quoteDate}
+                  {q.pdfStorageKey ? ` · ${t('inquiryDownload')}` : ''}
+                </li>
+              ))}
+            </ul>
+          )}
+          <form action={recordQuoteAction} className="op-form">
+            <p className="op-form__label">{t('inquiryAddQuote')}</p>
+            <input type="hidden" name="locale" value={locale} />
+            <input type="hidden" name="id" value={detail.id} />
+            <label className="op-form__row">
+              <span>{t('inquiryQuoteAmount')}</span>
+              <input type="number" step="0.01" min="0" name="amount" />
+            </label>
+            <label className="op-form__row">
+              <span>{t('inquiryQuoteCurrency')}</span>
+              <input type="text" name="currency" placeholder="USD" maxLength={3} />
+            </label>
+            <label className="op-form__row">
+              <span>{t('inquiryQuoteDate')}</span>
+              <input type="datetime-local" name="quoteDate" />
+            </label>
+            <label className="op-form__row">
+              <span>{t('inquiryQuotePdf')}</span>
+              <input type="text" name="pdfStorageKey" />
+            </label>
+            <p className="detail-muted">{t('inquiryQuoteHint')}</p>
+            <button type="submit" className="admin-btn">{t('inquiryApply')}</button>
+          </form>
         </section>
 
         <aside className="detail-side">
@@ -224,6 +284,17 @@ export default async function InquiryDetailPage({
               </label>
               <button type="submit" className="admin-btn">{t('inquiryApply')}</button>
             </form>
+
+            <form action={setFollowUpAction} className="op-form">
+              <p className="op-form__label">{t('inquirySetFollowUp')}</p>
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="id" value={detail.id} />
+              <label className="op-form__row">
+                <span>{t('inquiryFollowUpHint')}</span>
+                <input type="datetime-local" name="followUpAt" />
+              </label>
+              <button type="submit" className="admin-btn">{t('inquiryApply')}</button>
+            </form>
           </section>
 
           <section className="detail-card">
@@ -235,7 +306,7 @@ export default async function InquiryDetailPage({
                 {detail.activities.map((a, i) => (
                   <li key={i}>
                     <span className="detail-activity__type">
-                      {t(`inquiryActivity${a.activityType.charAt(0).toUpperCase()}${a.activityType.slice(1)}`)}
+                      {t(activityLabelKey(a.activityType))}
                     </span>
                     <span className="detail-muted">{formatDateTime(a.createdAt, locale)}</span>
                   </li>

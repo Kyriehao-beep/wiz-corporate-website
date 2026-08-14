@@ -280,3 +280,40 @@ export async function getInquiryAttachments(
     createdAt: r.created_at,
   }))
 }
+
+export interface InquiryQuoteView {
+  id: string
+  amount: number
+  currency: string
+  quoteDate: string
+  pdfStorageKey: string | null
+  createdAt: string
+}
+
+/** List the quotes recorded against an inquiry (WIZ-staff only via service client). */
+export async function getInquiryQuotes(
+  id: string,
+  client: SupabaseClient,
+): Promise<InquiryQuoteView[]> {
+  const { data, error } = await client
+    .from('inquiry_quotes')
+    .select('id, amount, currency, quote_date, pdf_storage_key, created_at')
+    .eq('inquiry_id', id)
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(`inquiry_quotes query failed: ${error.message}`)
+  return (data ?? []).map((r: {
+    id: string
+    amount: number
+    currency: string
+    quote_date: string
+    pdf_storage_key: string | null
+    created_at: string
+  }) => ({
+    id: r.id,
+    amount: Number(r.amount),
+    currency: r.currency,
+    quoteDate: r.quote_date,
+    pdfStorageKey: r.pdf_storage_key,
+    createdAt: r.created_at,
+  }))
+}
