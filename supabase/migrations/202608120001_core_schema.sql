@@ -1,6 +1,11 @@
 -- 202608120001_core_schema.sql
 -- WIZ core relational schema (Plan 2 / Task 1)
 -- Deterministic, reversible schema. Run via `supabase db reset` / `supabase migration up`.
+--
+-- All catalog fields (tone/priority on base tables, surrogate id PK + editorial
+-- columns on translation tables) are defined inline in CREATE TABLE. This avoids
+-- fragile multi-migration ALTER TABLE chains that can fail non-deterministically
+-- under Supabase CLI's seed runner.
 
 create extension if not exists citext with schema extensions;
 
@@ -39,17 +44,24 @@ create table public.products (
 );
 
 create table public.product_translations (
-  product_id   uuid not null references public.products(id) on delete cascade,
-  locale       text not null check (locale in ('en', 'ja', 'zh-CN')),
-  title        text not null,
-  summary      text not null,
-  body         text not null default '',
-  seo_title    text not null default '',
-  seo_description text not null default '',
-  approved     boolean not null default false,
-  fallback_to_en boolean not null default false,
-  primary key (product_id, locale)
+  id                  uuid primary key default gen_random_uuid(),
+  product_id          uuid not null references public.products(id) on delete cascade,
+  locale              text not null check (locale in ('en', 'ja', 'zh-CN')),
+  title               text not null,
+  summary             text not null,
+  body                text not null default '',
+  seo_title           text not null default '',
+  seo_description     text not null default '',
+  approved            boolean not null default false,
+  fallback_to_en      boolean not null default false,
+  eyebrow             text not null default '',
+  suitability         text[] not null default '{}',
+  construction        text[] not null default '{}',
+  visual_options      text[] not null default '{}',
+  attachment_options  text[] not null default '{}',
+  artwork_guidance    text not null default ''
 );
+create unique index product_translations_locale_unique on public.product_translations (product_id, locale);
 
 create table public.product_media (
   id           uuid primary key default gen_random_uuid(),
@@ -71,15 +83,19 @@ create table public.applications (
 );
 
 create table public.application_translations (
-  application_id uuid not null references public.applications(id) on delete cascade,
-  locale       text not null check (locale in ('en', 'ja', 'zh-CN')),
-  title        text not null,
-  summary      text not null default '',
-  body         text not null default '',
-  seo_title    text not null default '',
-  seo_description text not null default '',
-  primary key (application_id, locale)
+  id                       uuid primary key default gen_random_uuid(),
+  application_id           uuid not null references public.applications(id) on delete cascade,
+  locale                   text not null check (locale in ('en', 'ja', 'zh-CN')),
+  title                    text not null,
+  summary                  text not null default '',
+  body                     text not null default '',
+  seo_title                text not null default '',
+  seo_description          text not null default '',
+  buyer_problem            text not null default '',
+  attachment_considerations text not null default '',
+  visual_direction         text not null default ''
 );
+create unique index application_translations_locale_unique on public.application_translations (application_id, locale);
 
 create table public.application_media (
   id             uuid primary key default gen_random_uuid(),
