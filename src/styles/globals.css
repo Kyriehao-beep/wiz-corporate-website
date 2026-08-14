@@ -234,6 +234,17 @@ h1, h2, h3 { text-wrap: balance; overflow-wrap: anywhere; scroll-margin-top: 110
 .field--invalid .field__input:focus-visible { box-shadow: 0 0 0 3px rgb(192 57 43 / 35%); }
 .field__error { margin: 0; color: #b3261e; font-size: .72rem; }
 
+.rfq-intro { max-width: 60ch; margin: 0 0 1.75rem; color: var(--muted); line-height: 1.7; }
+.rfq-success { max-width: 60ch; margin-inline: auto; padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-raised); }
+.rfq-success h2 { margin: 0 0 .6rem; font-family: Georgia, serif; font-weight: 400; font-size: 1.8rem; }
+.rfq-success p { margin: 0; color: var(--muted); line-height: 1.7; }
+.rfq-size { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; }
+.rfq-size legend { padding: 0; }
+.rfq-size .radio { margin: 0; }
+.rfq-size__dims { flex-basis: 100%; margin-top: .5rem; }
+.radio { display: inline-flex; align-items: center; gap: .45rem; font-size: .82rem; color: var(--ink); cursor: pointer; }
+.radio input { width: 18px; height: 18px; accent-color: var(--accent); }
+
 .auth-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: .1rem 0 1.4rem; }
 .checkbox { display: inline-flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--muted); cursor: pointer; }
 .checkbox input { width: 18px; height: 18px; accent-color: var(--accent); }

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
+import { NextIntlClientProvider } from 'next-intl'
 import { describe, expect, it } from 'vitest'
 
+import { loadMessages } from '@/i18n/messages'
 import { AboutPage, CapabilitiesPage, ContactPage, ProcessPage, RfqPage } from '@/components/site/support-pages'
 
 describe('supporting trust pages', () => {
@@ -25,10 +27,16 @@ describe('supporting trust pages', () => {
     render(<AboutPage locale="en" />)
     expect(screen.getByText(/owned mainland factory/i)).toBeInTheDocument()
   })
-  it('renders a front-end RFQ briefing form', () => {
-    render(<RfqPage locale="en" searchParams={{ product: 'custom-pvc-rubber-patches' }} />)
+  it('renders the guided RFQ wizard', async () => {
+    const messages = await loadMessages('en')
+    render(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <RfqPage locale="en" />
+      </NextIntlClientProvider>,
+    )
     expect(screen.getByLabelText(/work email/i)).toBeInTheDocument()
-    expect(screen.getByDisplayValue('custom-pvc-rubber-patches')).toBeInTheDocument()
-    expect(screen.getAllByText(/backend connection follows/i).length).toBeGreaterThan(0)
+    expect(screen.getByRole('option', { name: /custom pvc rubber patches/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /submit inquiry/i })).toBeInTheDocument()
+    expect(screen.getByText(/i agree to the privacy policy/i)).toBeInTheDocument()
   })
 })
