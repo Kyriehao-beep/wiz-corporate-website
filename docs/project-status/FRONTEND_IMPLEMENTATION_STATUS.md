@@ -172,6 +172,19 @@ Verification this session: `npx vitest run` ⇒ **49/49 passed** (was 16); `tsc 
 
 Environment reality (must not be glossed over): the remaining Plan 2 tasks require Supabase (Docker), Resend, and Cloudflare Turnstile — none available in this sandbox (network disabled) or on the user's Mac (no pnpm/Docker/Supabase CLI; `@supabase/*`, `react-hook-form`, `resend` not installed). Full-stack tasks (schema/RLS, SSR auth, catalog repo, wizard UI, uploads, inquiry creation, notifications, admin UI, security gate) are deferred until a provisioned environment exists. User chose logic-first over provisioning infra first.
 
+## Plan 2 Backend — Remaining Pure Slices (committed locally)
+
+Completed on branch `agent/public-website-foundation` after the logic-first foundation; all passed `tsc --noEmit`, `vitest` (full suite **86/86**), and `next build --webpack`. No push / no PR per sub-plan.
+
+- `e1fc06e` Guided RFQ wizard UI wired to `submitRfqAction` (RfqWizard + trilingual rfq i18n).
+- `462e19a` Notification content assembly (`src/features/notifications/notify-content.ts`): pure trilingual customer confirmation + internal sales alert; never emits private file links. Resend adapter / React Email templates (Task 8) consume this. 6/6 tests.
+- `e6633dd` Admin inquiry queries (`src/features/inquiries/query-inquiries.ts`): pure `buildInquiryFilterClauses` / `applyInquiryFilters` + `mapInquirySummary/Detail`, plus thin Supabase `queryInquiries` / `getInquiryDetail` (product/application narrowing via inquiry_items, pagination). 9/9 tests.
+- `83dd2f1` Supabase catalog repository (`src/features/catalog/supabase-catalog-repository.ts` + `get-catalog-repository.ts`): pure `resolveCatalogTranslation` (requested locale → English fallback, hides unapproved drafts) + row mappers; thin SSR-client wiring. 9/9 tests.
+
+**Known schema gap (flagged):** the committed `supabase/migrations` store only `title`/`summary`/`body`/`seo_*` per catalog translation. The rich editorial fields on `ProductDetail`/`ApplicationDetail` (eyebrow, tone, suitability, construction, visualOptions, attachmentOptions, artworkGuidance, buyerProblem, recommendedProductSlugs, attachmentConsiderations, visualDirection, priority) are fixture-only and defaulted in the adapter until the schema is extended. Live query round-trips for all three slices await the local Supabase runbook (item 3).
+
+Next: user brings up Supabase per `docs/setup/local-supabase-runbook.md`, then validate the end-to-end submission + admin query path and report errors back for fixes.
+
 ## Resume Checklist
 
 1. Read this file, the approved PRD, and the public website implementation plan.
