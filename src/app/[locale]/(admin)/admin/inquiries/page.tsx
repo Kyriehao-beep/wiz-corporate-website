@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { requireAdmin, type WizLocale } from '@/features/auth/require-admin'
@@ -80,7 +81,9 @@ export default async function InquiriesPage({ params }: { params: Promise<{ loca
                         <span>{t('inquiryCreatedAt')}</span>
                         {formatDate(card.createdAt, locale)}
                       </p>
-                      <button type="button" className="admin-linkbtn">{t('inquiryOpen')}</button>
+                      <Link href={`/${locale}/admin/inquiries/${card.id}`} className="admin-linkbtn">
+                        {t('inquiryOpen')}
+                      </Link>
                     </article>
                   ))}
                 </div>

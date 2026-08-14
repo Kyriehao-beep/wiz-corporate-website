@@ -1,5 +1,14 @@
 export type InquiryStatus = 'new' | 'contacted' | 'quoted' | 'won' | 'closed'
 
+/** Canonical ordered list of every inquiry status, for UI enumeration. */
+export const INQUIRY_STATUSES: InquiryStatus[] = [
+  'new',
+  'contacted',
+  'quoted',
+  'won',
+  'closed',
+]
+
 /** Allowed forward and reopen transitions. Every closing transition requires a reason. */
 const ALLOWED: Record<InquiryStatus, InquiryStatus[]> = {
   new: ['contacted', 'closed'],

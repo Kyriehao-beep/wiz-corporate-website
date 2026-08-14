@@ -242,3 +242,40 @@ export async function getInquiryDetail(
     (activities ?? []) as Array<{ activity_type: string; created_at: string; payload: Record<string, unknown> }>,
   )
 }
+
+export interface InquiryAttachmentView {
+  id: string
+  storageKey: string
+  displayName: string
+  contentType: string
+  sizeBytes: number
+  createdAt: string
+}
+
+/** List the artwork files attached to an inquiry (WIZ-staff only via service client). */
+export async function getInquiryAttachments(
+  id: string,
+  client: SupabaseClient,
+): Promise<InquiryAttachmentView[]> {
+  const { data, error } = await client
+    .from('inquiry_attachments')
+    .select('id, storage_key, display_name, content_type, size_bytes, created_at')
+    .eq('inquiry_id', id)
+    .order('created_at', { ascending: true })
+  if (error) throw new Error(`inquiry_attachments query failed: ${error.message}`)
+  return (data ?? []).map((r: {
+    id: string
+    storage_key: string
+    display_name: string
+    content_type: string
+    size_bytes: number
+    created_at: string
+  }) => ({
+    id: r.id,
+    storageKey: r.storage_key,
+    displayName: r.display_name,
+    contentType: r.content_type,
+    sizeBytes: r.size_bytes,
+    createdAt: r.created_at,
+  }))
+}
