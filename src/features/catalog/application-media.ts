@@ -7,6 +7,23 @@ type ApplicationMediaEntry = {
 }
 
 const mediaBySlug = {
+  // ── Seed slugs (from supabase/seed.sql) ──
+  apparel: {
+    src: '/media/drafts/application-outdoor-apparel.png',
+    alt: { en: 'Layered technical apparel in a clean studio setting', ja: '清潔なスタジオに置かれたレイヤード仕様のテクニカルアパレル', 'zh-CN': '整洁工作室环境中的多层技术服装' },
+    objectPosition: '50% 45%',
+  },
+  outdoor: {
+    src: '/media/drafts/application-surf-watersports.png',
+    alt: { en: 'Rugged outdoor gear exposed to the elements', ja: '過酷な環境にさらされたアウトドアギア', 'zh-CN': '暴露在严苛环境中的户外装备' },
+    objectPosition: '50% 50%',
+  },
+  automotive: {
+    src: '/media/drafts/application-tactical-uniforms.png',
+    alt: { en: 'Automotive badge and trim on a clean surface', ja: '清潔な表面に置かれた自動車バッジとトリム', 'zh-CN': '整洁表面上的汽车徽标与饰条' },
+    objectPosition: '50% 48%',
+  },
+  // ── Fixture slugs (for CATALOG_SOURCE=fixture mode) ──
   'surf-watersports': {
     src: '/media/drafts/application-surf-watersports.png',
     alt: { en: 'Technical watersports gear beside a surfboard on a rugged shore', ja: '岩場の海岸に置かれたサーフボードとウォータースポーツギア', 'zh-CN': '礁石海岸旁的冲浪板与水上运动装备' },
