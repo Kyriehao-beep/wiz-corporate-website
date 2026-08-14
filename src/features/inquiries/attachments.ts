@@ -52,9 +52,6 @@ export function buildStorageKey(fileName: string): string {
  */
 export function validateAttachmentSet(files: FileDescriptor[]): FilePolicyResult {
   if (files.length === 0) return { ok: true }
-  if (files.length > MAX_FILES) {
-    return { ok: false, reason: `at most ${MAX_FILES} files may be uploaded` }
-  }
   const agg = validateAggregateSize(files.map((f) => f.size))
   if (!agg.ok) return agg
   for (const file of files) {

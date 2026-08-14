@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic'
 // Resend event type → notification_queue.status (matches the status enum:
 // pending | sent | failed | retry).
 const QUEUE_STATUS_BY_EVENT: Record<string, 'sent' | 'failed'> = {
+  'email.sent': 'sent',
   'email.delivered': 'sent',
   'email.bounced': 'failed',
   'email.complained': 'failed',
@@ -20,8 +21,14 @@ export async function POST(req: Request) {
   const raw = await req.text()
 
   if (!secret) {
-    // Local/dev: no secret configured → process without verification.
-    console.warn('[resend webhook] RESEND_WEBHOOK_SECRET unset — skipping signature verification')
+    // Dev only: skip signature verification. In production a missing secret is a
+    // misconfiguration — refuse to mutate delivery state on unsigned requests
+    // (otherwise anyone could forge bounce/complaint events).
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[resend webhook] RESEND_WEBHOOK_SECRET unset in production — refusing unsigned events')
+      return NextResponse.json({ error: 'webhook_not_configured' }, { status: 503 })
+    }
+    console.warn('[resend webhook] RESEND_WEBHOOK_SECRET unset — skipping signature verification (dev)')
   } else if (
     !verifyResendWebhook(raw, secret, {
       id: req.headers.get('svix-id'),

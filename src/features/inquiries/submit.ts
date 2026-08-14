@@ -4,7 +4,12 @@ import { rfqSchema, type RfqInput } from '@/features/rfq/schema'
 import { hashIdentifier } from '@/lib/security/rate-limit'
 import { createServiceClient } from '@/lib/supabase/service'
 
-import { linkAttachments, uploadFilesToStorage, type AttachmentMeta, type UploadFile } from './attachments'
+import {
+  linkAttachments,
+  uploadFilesToStorage,
+  validateAttachmentSet,
+  type UploadFile,
+} from './attachments'
 import { buildInquiryPayload, generateInquiryNumber } from './rfq-mapping'
 import { checkAndIncrementRateLimit } from './rate-limit-enforcement'
 import { notifyInquiryReceived } from '@/features/notifications/send-notification'
@@ -14,7 +19,11 @@ import {
   productDisplayName,
 } from '@/features/notifications/inquiry-summary'
 
-export type SubmitInquiryError = 'invalid_input' | 'rate_limited' | 'persistence_failed'
+export type SubmitInquiryError =
+  | 'invalid_input'
+  | 'rate_limited'
+  | 'invalid_attachment'
+  | 'persistence_failed'
 
 export type SubmitInquiryResult =
   | { ok: true; inquiryId: string; inquiryNumber: string }
@@ -53,6 +62,18 @@ export async function submitInquiry(
   }
   const rfq: RfqInput = parsed.data
 
+  // Validate attachments up-front so malformed uploads are rejected as a client error
+  // (invalid_attachment) before we consume the rate-limit budget or create any rows.
+  if (ctx.files && ctx.files.length > 0) {
+    const policy = validateAttachmentSet(
+      ctx.files.map((f) => ({ name: f.name, size: f.size, type: f.type })),
+    )
+    if (!policy.ok) {
+      console.warn('[submitInquiry] attachment policy rejected:', policy.reason)
+      return { ok: false, error: 'invalid_attachment' }
+    }
+  }
+
   const now = ctx.now ?? new Date()
   const keyHash = hashIdentifier(
     ctx.rateLimitSecret,
@@ -73,22 +94,12 @@ export async function submitInquiry(
     return { ok: false, error: 'rate_limited' }
   }
 
-  // Upload artwork BEFORE creating the inquiry so a storage failure aborts cleanly
-  // (no orphaned inquiry row). Uploads are skipped entirely when no files are attached.
-  let attachmentMetas: AttachmentMeta[] = []
-  if (ctx.files && ctx.files.length > 0) {
-    try {
-      attachmentMetas = await uploadFilesToStorage(client, ctx.files)
-    } catch (err) {
-      console.error('[submitInquiry] attachment upload failed', err)
-      return { ok: false, error: 'persistence_failed' }
-    }
-  }
-
   const idempotencyKey = ctx.idempotencyKey ?? randomUUID()
   const inquiryNumber = generateInquiryNumber(now)
   const { inquiry, items } = buildInquiryPayload(rfq, { idempotencyKey, inquiryNumber, now })
 
+  // Create the inquiry rows first. Artwork is only uploaded + linked AFTER this
+  // succeeds, so a storage/upload failure can never leave a dangling inquiry row.
   const { data: inserted, error: insErr } = await client
     .from('inquiries')
     .insert(inquiry)
@@ -111,16 +122,19 @@ export async function submitInquiry(
     payload: { source: inquiry.source, locale: inquiry.locale },
   })
 
-  if (attachmentMetas.length > 0) {
+  // Upload + link artwork (non-fatal): an inquiry without attachments is still valid,
+  // and an upload/link failure here cannot orphan rows since they already exist.
+  if (ctx.files && ctx.files.length > 0) {
     try {
+      const attachmentMetas = await uploadFilesToStorage(client, ctx.files)
       await linkAttachments(client, inserted.id, attachmentMetas)
     } catch (err) {
-      console.error('[submitInquiry] failed to link attachments', err)
+      console.error('[submitInquiry] attachment handling failed (non-fatal)', err)
     }
   }
 
-  // Fire-and-forget notifications: a mail-provider outage must never roll back the
-  // inquiry. Errors are logged; the submission still succeeds.
+  // Notifications are awaited but non-fatal: a mail-provider outage must never roll
+  // back the inquiry. Errors are logged; the submission still succeeds.
   try {
     await notifyInquiryReceived({
       inquiryId: inserted.id,

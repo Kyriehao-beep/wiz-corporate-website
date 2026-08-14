@@ -49,7 +49,9 @@ async function recordNotification(
     recipient_type: recipientType,
     locale,
     channel: 'email',
-    status: send.ok ? 'sent' : 'failed',
+    // 'pending' until a webhook event (email.sent/delivered/bounced) flips it;
+    // 'failed' only when the initial send itself was rejected by the provider.
+    status: send.ok ? 'pending' : 'failed',
     provider_message_id: send.id ?? null,
   })
   if (error) {

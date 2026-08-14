@@ -84,6 +84,7 @@ export async function submitRfqAction(
   if (!result.ok) {
     const map: Record<typeof result.error, RfqFormState['error']> = {
       invalid_input: 'invalid_input',
+      invalid_attachment: 'invalid_input',
       rate_limited: 'rate_limited',
       persistence_failed: 'try_again',
     }
