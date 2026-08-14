@@ -7,6 +7,12 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { linkAttachments, uploadFilesToStorage, type AttachmentMeta, type UploadFile } from './attachments'
 import { buildInquiryPayload, generateInquiryNumber } from './rfq-mapping'
 import { checkAndIncrementRateLimit } from './rate-limit-enforcement'
+import { notifyInquiryReceived } from '@/features/notifications/send-notification'
+import {
+  applicationDisplayName,
+  buildSpecSummary,
+  productDisplayName,
+} from '@/features/notifications/inquiry-summary'
 
 export type SubmitInquiryError = 'invalid_input' | 'rate_limited' | 'persistence_failed'
 
@@ -111,6 +117,27 @@ export async function submitInquiry(
     } catch (err) {
       console.error('[submitInquiry] failed to link attachments', err)
     }
+  }
+
+  // Fire-and-forget notifications: a mail-provider outage must never roll back the
+  // inquiry. Errors are logged; the submission still succeeds.
+  try {
+    await notifyInquiryReceived({
+      inquiryId: inserted.id,
+      inquiryNumber,
+      locale: rfq.locale,
+      companyName: rfq.companyName,
+      contactName: rfq.contactName,
+      customerEmail: rfq.workEmail,
+      countryRegion: rfq.countryRegion,
+      productName: productDisplayName(rfq.productSlug),
+      applicationName: applicationDisplayName(rfq.applicationSlug),
+      specSummary: buildSpecSummary(rfq),
+      source: inquiry.source,
+      adminUrl: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/admin/inquiries/${inserted.id}`,
+    })
+  } catch (err) {
+    console.error('[submitInquiry] notification dispatch failed (non-fatal)', err)
   }
 
   return { ok: true, inquiryId: inserted.id, inquiryNumber }
