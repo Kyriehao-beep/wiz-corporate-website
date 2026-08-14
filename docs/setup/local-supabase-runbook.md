@@ -126,6 +126,10 @@ npm run dev
 | 访问 `/zh-CN/products/custom-pvc-rubber-patches`（默认走 Supabase 仓储） | 页面显示 eyebrow、suitability / construction / visualOptions / attachmentOptions 列表、artworkGuidance 正文，而非空白或 fixture 兜底 |
 | 访问 `/zh-CN/applications/apparel` | 页面显示 buyerProblem、recommendedProductSlugs、attachmentConsiderations、visualDirection |
 
+> **改完配置/代码后必须重启 dev**：`.env.local` 的改动，以及目录页从 fixture 切到 `getCatalogRepository()` + `force-dynamic` 的路由配置变更，都需要重启 `npm run dev` 才生效（Fast Refresh 不会重读 env，也不会重算路由渲染模式）。重启后再开上面的 URL。
+>
+> **目录页行为说明（2026-08-13 修复后）**：`/products` 与 `/applications` 列表、以及两者 `[slug]` 详情页现在统一走 `getCatalogRepository()`（配了 Supabase 即读真实库，anon key + `*_public_read` RLS 放行），并标记为 `ƒ Dynamic`（构建期不触库，`next build` 无需联网）。因此列表只显示 seed 的 **3 个产品 / 3 个应用**，不再是 fixtures 的 9 应用 / 5 产品；`apparel` / `outdoor` / `automotive` 等 seed slug 走 DB 渲染。若之前看到的是 fixtures 内容，说明 dev server 还在跑旧代码——重启即可。
+
 ---
 
 ## 6. 跑 pgTAP 数据库测试（可选，需 Docker，现在有了）
