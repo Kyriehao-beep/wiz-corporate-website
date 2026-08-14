@@ -183,6 +183,14 @@ via the service role only).
 - [ ] `pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:db`
 - [ ] `pnpm test:e2e -- e2e/rfq-admin.spec.ts` (Playwright — **cannot run in this
       sandbox**; run on a non-sandboxed runner). See `e2e/rfq-admin.spec.ts`.
+      The E2E suite covers the plan's full denial/recovery matrix: anonymous
+      admin denial, unsigned private-file denial, expired signed link, invalid/
+      oversized file, failed Turnstile, notification-provider failure after
+      durable creation, invalid webhook signature, duplicate submit, closure
+      reason, reopen audit, and CSV formula escaping. Three cases are env-gated
+      and skip loudly when their precondition isn't met:
+      `E2E_ENFORCE_WEBHOOK_SIGNATURE=1` (webhook 401), `E2E_TURNSTILE_ENABLED=1`
+      (failed Turnstile), `E2E_ATTACHMENT_ID=<seeded id>` (signed-download path).
 - [ ] `pnpm build`
 - [ ] Confirm all server-only secrets are set in the host and **not** in client
       bundles (none currently are).
