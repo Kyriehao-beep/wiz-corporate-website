@@ -42,7 +42,7 @@ export interface ProductRow {
   display_order: number
   tone: string
   product_translations: ProductTranslationRow[]
-  product_applications?: Array<{ application_slug: string }>
+  product_applications?: Array<{ applications?: { slug: string } | null }>
 }
 
 export interface ApplicationTranslationRow {
@@ -103,7 +103,9 @@ export function mapProductDetail(
     // Backward-compatible fallback: before artwork_guidance was populated,
     // body carried the guidance copy. Prefer the dedicated column when present.
     artworkGuidance: tr.artwork_guidance || tr.body,
-    applicationSlugs: (row.product_applications ?? []).map((a) => a.application_slug),
+    applicationSlugs: (row.product_applications ?? [])
+      .map((a) => a.applications?.slug)
+      .filter((slug): slug is string => typeof slug === 'string'),
   }
 }
 
@@ -169,7 +171,7 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     const client = await this.getClient()
     const { data, error } = await client
       .from('products')
-      .select('id, slug, status, display_order, tone, product_translations(*), product_applications(application_slug)')
+      .select('id, slug, status, display_order, tone, product_translations(*), product_applications(applications(slug))')
       .eq('status', 'published')
       .eq('slug', slug)
       .maybeSingle()
