@@ -8,17 +8,14 @@ import { createServerClient } from '@/lib/supabase/server'
  * Supabase-backed implementation of `CatalogRepository` (Plan Task 3).
  *
  * Row shapes mirror `supabase/migrations/202608120001_core_schema.sql` +
- * `seed.sql`. IMPORTANT SCHEMA GAP: the current database stores only
- * `title` / `summary` / `body` / `seo_*` per translation. The rich editorial
- * fields on `ProductDetail` / `ApplicationDetail` (eyebrow, tone, index,
- * suitability, construction, visualOptions, attachmentOptions,
- * artworkGuidance, buyerProblem, recommendedProductSlugs,
- * attachmentConsiderations, visualDirection, priority) are fixture-only and not
- * yet modelled in the schema. Until that schema extension lands, they are
- * defaulted here (empty arrays / neutral tone / body reused as guidance). The
- * pure logic (locale fallback + mapping) is fully unit-tested; the live query
- * round-trip is verified when the database is brought up via the local
- * Supabase runbook.
+ * `202608130001_catalog_editorial_fields.sql` + `seed.sql`. The rich editorial
+ * fields (eyebrow, tone, suitability, construction, visualOptions,
+ * attachmentOptions, artworkGuidance, buyerProblem, recommendedProductSlugs,
+ * attachmentConsiderations, visualDirection, priority) are now modelled in the
+ * schema — per-language content lives on the `*_translations` tables, while the
+ * language-neutral `tone` / `priority` live on the base tables. The pure logic
+ * (locale fallback + mapping) is fully unit-tested; the live query round-trip
+ * is verified when the database is brought up via the local Supabase runbook.
  */
 
 export interface ProductTranslationRow {
@@ -30,6 +27,12 @@ export interface ProductTranslationRow {
   seo_description: string
   approved: boolean
   fallback_to_en: boolean
+  eyebrow: string
+  suitability: string[]
+  construction: string[]
+  visual_options: string[]
+  attachment_options: string[]
+  artwork_guidance: string
 }
 
 export interface ProductRow {
@@ -37,6 +40,7 @@ export interface ProductRow {
   slug: string
   status: 'draft' | 'published' | 'archived'
   display_order: number
+  tone: string
   product_translations: ProductTranslationRow[]
   product_applications?: Array<{ application_slug: string }>
 }
@@ -48,14 +52,19 @@ export interface ApplicationTranslationRow {
   body: string
   seo_title: string
   seo_description: string
+  buyer_problem: string
+  attachment_considerations: string
+  visual_direction: string
 }
 
 export interface ApplicationRow {
   id: string
   slug: string
   display_order: number
+  tone: string
+  priority: boolean
   application_translations: ApplicationTranslationRow[]
-  product_applications?: Array<{ product_slug: string }>
+  product_applications?: Array<{ products?: { slug: string } | null }>
 }
 
 /** Pure locale resolution: requested locale if approved, else English fallback. */
@@ -74,10 +83,10 @@ export function mapProductSummary(row: ProductRow, tr: ProductTranslationRow): P
   return {
     slug: row.slug,
     name: tr.title,
-    eyebrow: '',
+    eyebrow: tr.eyebrow,
     description: tr.summary,
     index: String(row.display_order).padStart(2, '0'),
-    tone: 'forest',
+    tone: row.tone,
   }
 }
 
@@ -87,11 +96,13 @@ export function mapProductDetail(
 ): ProductDetail {
   return {
     ...mapProductSummary(row, tr),
-    suitability: [],
-    construction: [],
-    visualOptions: [],
-    attachmentOptions: [],
-    artworkGuidance: tr.body,
+    suitability: tr.suitability,
+    construction: tr.construction,
+    visualOptions: tr.visual_options,
+    attachmentOptions: tr.attachment_options,
+    // Backward-compatible fallback: before artwork_guidance was populated,
+    // body carried the guidance copy. Prefer the dedicated column when present.
+    artworkGuidance: tr.artwork_guidance || tr.body,
     applicationSlugs: (row.product_applications ?? []).map((a) => a.application_slug),
   }
 }
@@ -104,9 +115,9 @@ export function mapApplicationSummary(
     slug: row.slug,
     name: tr.title,
     description: tr.summary,
-    priority: false,
+    priority: row.priority,
     index: String(row.display_order).padStart(2, '0'),
-    tone: 'forest',
+    tone: row.tone,
   }
 }
 
@@ -116,10 +127,12 @@ export function mapApplicationDetail(
 ): ApplicationDetail {
   return {
     ...mapApplicationSummary(row, tr),
-    buyerProblem: tr.body,
-    recommendedProductSlugs: (row.product_applications ?? []).map((p) => p.product_slug),
-    attachmentConsiderations: '',
-    visualDirection: '',
+    buyerProblem: tr.buyer_problem,
+    recommendedProductSlugs: (row.product_applications ?? [])
+      .map((p) => p.products?.slug)
+      .filter((slug): slug is string => typeof slug === 'string'),
+    attachmentConsiderations: tr.attachment_considerations,
+    visualDirection: tr.visual_direction,
   }
 }
 
@@ -139,7 +152,7 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     const client = await this.getClient()
     const { data, error } = await client
       .from('products')
-      .select('id, slug, status, display_order, product_translations(locale, title, summary, approved, fallback_to_en)')
+      .select('id, slug, status, display_order, tone, product_translations(locale, title, summary, eyebrow, approved, fallback_to_en)')
       .eq('status', 'published')
       .order('display_order', { ascending: true })
     if (error) throw new Error(`products query failed: ${error.message}`)
@@ -156,7 +169,7 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     const client = await this.getClient()
     const { data, error } = await client
       .from('products')
-      .select('id, slug, status, display_order, product_translations(*), product_applications(application_slug)')
+      .select('id, slug, status, display_order, tone, product_translations(*), product_applications(application_slug)')
       .eq('status', 'published')
       .eq('slug', slug)
       .maybeSingle()
@@ -172,7 +185,7 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     const client = await this.getClient()
     const { data, error } = await client
       .from('applications')
-      .select('id, slug, display_order, application_translations(locale, title, summary)')
+      .select('id, slug, display_order, tone, priority, application_translations(locale, title, summary)')
       .order('display_order', { ascending: true })
     if (error) throw new Error(`applications query failed: ${error.message}`)
     const rows = (data ?? []) as unknown as ApplicationRow[]
@@ -188,7 +201,7 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     const client = await this.getClient()
     const { data, error } = await client
       .from('applications')
-      .select('id, slug, display_order, application_translations(*), product_applications(product_slug)')
+      .select('id, slug, display_order, tone, priority, application_translations(*), product_applications(products!product_applications_product_id_fkey(slug))')
       .eq('slug', slug)
       .maybeSingle()
     if (error) throw new Error(`application query failed: ${error.message}`)

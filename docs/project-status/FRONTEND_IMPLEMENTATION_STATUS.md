@@ -181,9 +181,20 @@ Completed on branch `agent/public-website-foundation` after the logic-first foun
 - `e6633dd` Admin inquiry queries (`src/features/inquiries/query-inquiries.ts`): pure `buildInquiryFilterClauses` / `applyInquiryFilters` + `mapInquirySummary/Detail`, plus thin Supabase `queryInquiries` / `getInquiryDetail` (product/application narrowing via inquiry_items, pagination). 9/9 tests.
 - `83dd2f1` Supabase catalog repository (`src/features/catalog/supabase-catalog-repository.ts` + `get-catalog-repository.ts`): pure `resolveCatalogTranslation` (requested locale → English fallback, hides unapproved drafts) + row mappers; thin SSR-client wiring. 9/9 tests.
 
-**Known schema gap (flagged):** the committed `supabase/migrations` store only `title`/`summary`/`body`/`seo_*` per catalog translation. The rich editorial fields on `ProductDetail`/`ApplicationDetail` (eyebrow, tone, suitability, construction, visualOptions, attachmentOptions, artworkGuidance, buyerProblem, recommendedProductSlugs, attachmentConsiderations, visualDirection, priority) are fixture-only and defaulted in the adapter until the schema is extended. Live query round-trips for all three slices await the local Supabase runbook (item 3).
+**Schema gap (RESOLVED 2026-08-13):** previously the committed `supabase/migrations` stored only `title`/`summary`/`body`/`seo_*` per catalog translation, and the rich editorial fields on `ProductDetail`/`ApplicationDetail` were fixture-only and defaulted in the adapter. That gap is now closed by migration `202608130001_catalog_editorial_fields.sql` (see below), and the adapter reads the real columns. Live query round-trips for all three slices still await the local Supabase runbook (item 3) to confirm the end-to-end path.
 
-Next: user brings up Supabase per `docs/setup/local-supabase-runbook.md`, then validate the end-to-end submission + admin query path and report errors back for fixes.
+## Plan 2 Backend — Catalog Schema Extension (committed locally)
+
+User approved extending the catalog schema so the Supabase-backed repository returns full product/application detail instead of defaulted (thin) content.
+
+- `202608130001` Catalog editorial-fields migration (`supabase/migrations/202608130001_catalog_editorial_fields.sql`):
+  - `products.tone` (language-neutral visual token), `product_translations` adds `eyebrow`, `suitability text[]`, `construction text[]`, `visual_options text[]`, `attachment_options text[]`, `artwork_guidance`.
+  - `applications.tone` + `priority boolean`, `application_translations` adds `buyer_problem`, `attachment_considerations`, `visual_direction`.
+  - Design rule: per-language editorial content → `*_translations`; language-neutral `tone`/`priority` → base tables. Reversible (down section drops every column).
+- `src/features/catalog/supabase-catalog-repository.ts`: row types + mappers updated to read the new columns; `artwork_guidance` falls back to `body` when empty (backward-compatible); `getApplicationBySlug` recommended slugs now derive via `product_applications(products!product_applications_product_id_fkey(slug))`; SELECT lists fetch `tone`/`priority`/`eyebrow`.
+- `supabase-catalog-repository.test.ts`: fixtures + assertions extended for all new fields (incl. body-fallback + slug derivation). Catalog suite **19/19**, full suite **90/90**, `tsc --noEmit` clean, `next build --webpack` pending/verified.
+
+Next: user brings up Supabase per `docs/setup/local-supabase-runbook.md`, then validate the end-to-end submission + admin query + catalog detail path and report errors back for fixes.
 
 ## Resume Checklist
 
