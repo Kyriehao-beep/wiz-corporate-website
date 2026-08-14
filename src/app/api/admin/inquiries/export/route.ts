@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   }
 
   const client = await createServerClient()
-  const rows = await queryInquiries(filters, client)
+  const rows = await queryInquiries(filters, client, { all: true })
   const exportRows: InquiryExportRow[] = rows.map((r) => ({
     inquiryNumber: r.inquiryNumber,
     companyName: r.companyName,

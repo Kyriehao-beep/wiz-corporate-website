@@ -13,6 +13,9 @@ import {
 /** Bucket that holds RFQ artwork (private — only WIZ staff + the submitter's flow). */
 export const RFQ_ATTACHMENT_BUCKET = 'rfq-private'
 
+/** Bucket that holds uploaded PDF quotations (private — WIZ staff only). */
+export const QUOTE_BUCKET = 'quote-private'
+
 /** Metadata returned by the upload endpoint and stored against the inquiry. */
 export interface AttachmentMeta {
   storageKey: string

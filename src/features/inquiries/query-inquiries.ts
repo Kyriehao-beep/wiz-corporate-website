@@ -193,6 +193,7 @@ const ITEMS_PER_PAGE = 25
 export async function queryInquiries(
   filters: InquiryFilters,
   client: SupabaseClient,
+  options: { limit?: number; all?: boolean } = {},
 ): Promise<InquirySummary[]> {
   let matchingIds: string[] | null = null
   if (filters.productSlug || filters.applicationSlug) {
@@ -211,9 +212,11 @@ export async function queryInquiries(
     buildInquiryFilterClauses(filters),
   ) as unknown as typeof query
   if (matchingIds) query = query.in('id', matchingIds)
-  const { data, error } = await query
-    .order('created_at', { ascending: false })
-    .range(0, ITEMS_PER_PAGE - 1)
+  // Pagination is on by default for the admin list; export passes { all: true }
+  // to retrieve the entire filtered set.
+  const ordered = query.order('created_at', { ascending: false })
+  const paged = options.all ? ordered : ordered.range(0, (options.limit ?? ITEMS_PER_PAGE) - 1)
+  const { data, error } = await paged
 
   if (error) throw new Error(`inquiries query failed: ${error.message}`)
   return (data ?? []).map((row: InquiryRow) => mapInquirySummary(row))

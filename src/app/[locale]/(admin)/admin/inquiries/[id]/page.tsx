@@ -184,7 +184,14 @@ export default async function InquiryDetailPage({
               {quotes.map((q) => (
                 <li key={q.id}>
                   {q.currency} {q.amount.toFixed(2)} · {q.quoteDate}
-                  {q.pdfStorageKey ? ` · ${t('inquiryDownload')}` : ''}
+                  {q.pdfStorageKey ? (
+                    <>
+                      {' · '}
+                      <a href={`/${locale}/api/admin/files/quote/${q.id}`} className="detail-link" download>
+                        {t('inquiryDownload')}
+                      </a>
+                    </>
+                  ) : null}
                 </li>
               ))}
             </ul>
