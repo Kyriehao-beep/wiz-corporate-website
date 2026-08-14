@@ -2,6 +2,7 @@
 
 import { useState, useActionState } from 'react'
 import { useTranslations } from 'next-intl'
+import Script from 'next/script'
 
 import { Button } from '@/components/ui/button'
 import { submitRfqAction, type RfqFormState } from '@/features/inquiries/actions'
@@ -199,8 +200,29 @@ export function RfqWizard({ locale }: { locale: 'en' | 'ja' | 'zh-CN' }) {
 
       {state.error ? (
         <p className="field__error" role="alert">
-          {state.error === 'rate_limited' ? t('errorRateLimited') : state.error === 'invalid_input' ? t('errorInvalid') : t('errorGeneric')}
+          {state.error === 'rate_limited'
+            ? t('errorRateLimited')
+            : state.error === 'invalid_input'
+              ? t('errorInvalid')
+              : state.error === 'bot_check'
+                ? t('errorBotCheck')
+                : t('errorGeneric')}
         </p>
+      ) : null}
+
+      {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+        <>
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer
+          />
+          <div
+            className="cf-turnstile"
+            data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            data-theme="light"
+          />
+        </>
       ) : null}
 
       <Button type="submit" variant="primary" disabled={pending} aria-busy={pending}>

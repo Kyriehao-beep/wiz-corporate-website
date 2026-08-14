@@ -65,6 +65,7 @@
     "errorInvalid": "赤字の項目を確認してください。",
     "errorRateLimited": "送信回数が多すぎます。時間をおいて再度お試しください。",
     "errorGeneric": "エラーが発生しました。再度お試しください。",
+    "errorBotCheck": "送信前にセキュリティチェックを完了してください。",
     "product": {
       "customPvc": "カスタムPVCラバーパッチ",
       "embroidered": "刺繍パッチ",

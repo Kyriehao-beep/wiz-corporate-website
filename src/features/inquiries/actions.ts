@@ -2,10 +2,11 @@
 
 import { headers } from 'next/headers'
 
+import { verifyTurnstile } from '@/features/auth/turnstile'
 import { submitInquiry } from './submit'
 
 export interface RfqFormState {
-  error?: 'invalid_input' | 'rate_limited' | 'try_again'
+  error?: 'invalid_input' | 'rate_limited' | 'try_again' | 'bot_check'
   inquiryNumber?: string
 }
 
@@ -61,6 +62,19 @@ export async function submitRfqAction(
     'unknown'
   const rateLimitSecret =
     process.env.RFQ_RATE_LIMIT_SECRET ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+
+  // Anti-bot gate (Cloudflare Turnstile). Fails closed when a token is expected
+  // but absent/rejected; fails open only when the secret is unconfigured.
+  const turnstileToken = formData.get('cf-turnstile-response')
+  const turnstile = await verifyTurnstile({
+    token: typeof turnstileToken === 'string' ? turnstileToken : null,
+    ip,
+    secret: process.env.TURNSTILE_SECRET_KEY,
+  })
+  if (!turnstile.ok) {
+    console.warn('[submitRfqAction] Turnstile rejected submission', turnstile.reason)
+    return { error: 'bot_check' }
+  }
 
   const result = await submitInquiry(payload, { ip, rateLimitSecret })
   if (!result.ok) {

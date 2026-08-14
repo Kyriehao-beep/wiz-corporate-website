@@ -65,6 +65,7 @@
     "errorInvalid": "Please check the highlighted fields and try again.",
     "errorRateLimited": "Too many submissions. Please try again later.",
     "errorGeneric": "Something went wrong. Please try again.",
+    "errorBotCheck": "Please complete the security check before submitting.",
     "product": {
       "customPvc": "Custom PVC rubber patches",
       "embroidered": "Embroidered patches",
