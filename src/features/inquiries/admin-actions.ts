@@ -2,16 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { requireAdmin, type WizLocale } from '@/features/auth/require-admin'
+import { requireAdmin } from '@/features/auth/require-admin'
 import { createServiceClient } from '@/lib/supabase/service'
-import { isLocale } from '@/i18n/locales'
 import { validateTransition, INQUIRY_STATUSES, type InquiryStatus } from './lifecycle'
-
-/** Resolve the locale hidden input into a safe value; never trust client input blindly. */
-function readLocale(formData: FormData): WizLocale {
-  const raw = String(formData.get('locale') ?? 'en')
-  return isLocale(raw) ? raw : 'en'
-}
+import { readLocale } from './admin-shared'
 
 /**
  * Transition an inquiry's status. Guard-railed by `validateTransition` (pure,
@@ -56,7 +50,7 @@ export async function updateInquiryStatusAction(formData: FormData): Promise<voi
   }
   await client.from('inquiry_activities').insert({
     inquiry_id: id,
-    activity_type: 'status_changed',
+    activity_type: 'status_change',
     payload: { from, to, reason },
   })
   revalidatePath(`/${locale}/admin/inquiries/${id}`)
@@ -83,7 +77,7 @@ export async function assignInquiryAction(formData: FormData): Promise<void> {
   }
   await client.from('inquiry_activities').insert({
     inquiry_id: id,
-    activity_type: 'assigned',
+    activity_type: 'assignment',
     payload: { owner_id: ownerId },
   })
   revalidatePath(`/${locale}/admin/inquiries/${id}`)
@@ -101,7 +95,7 @@ export async function addInquiryNoteAction(formData: FormData): Promise<void> {
   const client = createServiceClient()
   const { error } = await client.from('inquiry_activities').insert({
     inquiry_id: id,
-    activity_type: 'note',
+    activity_type: 'internal_note',
     payload: { note },
   })
   if (error) {
@@ -126,9 +120,10 @@ export async function recordContactAction(formData: FormData): Promise<void> {
   await requireAdmin(locale)
 
   const client = createServiceClient()
+  const activityType = channel === 'phone' ? 'phone_contact' : 'email_contact'
   const { error } = await client.from('inquiry_activities').insert({
     inquiry_id: id,
-    activity_type: 'contact',
+    activity_type: activityType,
     payload: { channel, note },
   })
   if (error) {
