@@ -66,3 +66,37 @@ insert into public.product_applications (product_id, application_id) values
   ('bbbbbbbb-2222-4222-8222-222222222222','11111111-1111-4111-8111-111111111111'),
   ('cccccccc-3333-4333-8333-333333333333','11111111-1111-4111-8111-111111111111')
 on conflict do nothing;
+
+-- ── Additional products (expand catalog from 3 → 6) ──
+insert into public.products (id, slug, status, display_order, tone) values
+  ('dddddddd-4444-4444-8444-444444444444', 'heat-transfer-rubber-patches', 'published', 4, 'sand'),
+  ('eeeeeeee-5555-4555-8555-555555555555', 'sew-on-rubber-patches-labels', 'published', 5, 'stone'),
+  ('ffffffff-6666-4666-8666-666666666666', 'hook-and-loop-rubber-patches', 'published', 6, 'forest')
+on conflict (id) do nothing;
+
+insert into public.product_translations (
+  id, product_id, locale, title, summary, body, seo_title, seo_description, approved,
+  eyebrow, suitability, construction, visual_options, attachment_options, artwork_guidance
+) values
+  -- heat-transfer-rubber-patches
+  (gen_random_uuid(), 'dddddddd-4444-4444-8444-444444444444','en','Heat Transfer Rubber Patches','A clean, low-profile patch direction for compatible textiles and controlled heat-transfer workflows.','Soft rubber patches applied via heat transfer to approved textiles.','Heat Transfer Rubber Patches | WIZ','Order heat transfer rubber patches from WIZ.','t','Low-profile application','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Heat transfer to approved materials after testing"}','Share fabric composition and finishing details so transfer parameters can be evaluated.'),
+  (gen_random_uuid(), 'dddddddd-4444-4444-8444-444444444444','ja','熱転写ラバーパッチ','対応素材と管理された熱転写工程向けの、すっきりした薄型パッチ。','承認済み生地に熱転写で適用するソフトラバーパッチ。','熱転写ラバーパッチ | WIZ','WIZで熱転写ラバーパッチを注文。','t','薄型仕様','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Heat transfer to approved materials after testing"}','生地組成と仕上げ情報をご共有ください。'),
+  (gen_random_uuid(), 'dddddddd-4444-4444-8444-444444444444','zh-CN','热转印橡胶标牌','适用于兼容面料和受控热转印流程的轻薄标牌方案。','通过热转印工艺贴合到适用面料的柔软橡胶标牌。','热转印橡胶标牌 | WIZ','在 WIZ 订购热转印橡胶标牌。','t','轻薄应用','{"户外服装与装备","需要立体触感的品牌标识"}','{"柔韧模压 PVC/橡胶","尺寸、形状和配色均可定制"}','{"2D 或立体 3D 浮雕","哑光、同色系或高对比配色"}','{"测试确认后热转印至适用面料"}','请提供面料成分和后整理信息，以评估转印参数。'),
+  -- sew-on-rubber-patches-labels
+  (gen_random_uuid(), 'eeeeeeee-5555-4555-8555-555555555555','en','Sew-On Rubber Patches & Labels','Designed with sewing channels and edge geometry for dependable integration into garments and bags.','Rubber patches and labels built for sewing into garments and bags.','Sew-On Rubber Patches & Labels | WIZ','Order sew-on rubber patches and labels from WIZ.','t','Reliable construction','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Perimeter sew channel","Concealed sew points"}','Allow sufficient edge width for sewing and communicate the target stitch method.'),
+  (gen_random_uuid(), 'eeeeeeee-5555-4555-8555-555555555555','ja','縫い付けラバーパッチ＆ラベル','衣料やバッグに安定して組み込める縫製溝とエッジ形状。','衣料やバッグへの縫い付けに適したラバーパッチとラベル。','縫い付けラバーパッチ＆ラベル | WIZ','WIZで縫い付けラバーパッチ＆ラベルを注文。','t','安定した縫製仕様','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Perimeter sew channel","Concealed sew points"}','縫製幅を確保し、予定のステッチ方法をご指定ください。'),
+  (gen_random_uuid(), 'eeeeeeee-5555-4555-8555-555555555555','zh-CN','车缝橡胶标牌与标签','通过车缝槽和边缘结构，可靠应用于服装与箱包。','为车缝进服装与箱包而设计的橡胶标牌与标签。','车缝橡胶标牌与标签 | WIZ','在 WIZ 订购车缝橡胶标牌与标签。','t','可靠结构','{"户外服装与装备","需要立体触感的品牌标识"}','{"柔韧模压 PVC/橡胶","尺寸、形状和配色均可定制"}','{"2D 或立体 3D 浮雕","哑光、同色系或高对比配色"}','{"周边车缝槽","隐藏车缝点"}','需预留足够车缝边宽，并说明计划采用的针法。'),
+  -- hook-and-loop-rubber-patches
+  (gen_random_uuid(), 'ffffffff-6666-4666-8666-666666666666','en','Hook-and-Loop Rubber Patches','Removable rubber patches for uniforms, tactical gear, packs, and modular equipment.','Detachable rubber patches with hook backing for modular gear.','Hook-and-Loop Rubber Patches | WIZ','Order hook-and-loop rubber patches from WIZ.','t','Interchangeable identity','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Hook backing with matched loop panel options"}','Confirm the mating loop system and finished patch dimensions.'),
+  (gen_random_uuid(), 'ffffffff-6666-4666-8666-666666666666','ja','面ファスナーラバーパッチ','ユニフォーム、タクティカルギア、バッグ、モジュール装備向けの交換式パッチ。','モジュール装備向けのフック裏面付き着脱式ラバーパッチ。','面ファスナーラバーパッチ | WIZ','WIZで面ファスナーラバーパッチを注文。','t','交換可能な表示','{"Outdoor apparel and equipment","Branding that needs tactile depth"}','{"Flexible molded PVC/rubber","Custom size, shape, and color layout"}','{"2D or dimensional 3D relief","Matte, tonal, or high-contrast color systems"}','{"Hook backing with matched loop panel options"}','対応ループ面と仕上がり寸法をご確認ください。'),
+  (gen_random_uuid(), 'ffffffff-6666-4666-8666-666666666666','zh-CN','魔术贴橡胶标牌','适用于制服、战术装备、背包和模块化设备的可拆卸标牌。','带勾面背衬、可用于模块化装备的可拆卸橡胶标牌。','魔术贴橡胶标牌 | WIZ','在 WIZ 订购魔术贴橡胶标牌。','t','可替换标识','{"户外服装与装备","需要立体触感的品牌标识"}','{"柔韧模压 PVC/橡胶","尺寸、形状和配色均可定制"}','{"2D 或立体 3D 浮雕","哑光、同色系或高对比配色"}','{"勾面背衬及配套毛面方案"}','请确认配套毛面系统和成品尺寸。')
+on conflict (id) do nothing;
+
+insert into public.product_applications (product_id, application_id) values
+  ('dddddddd-4444-4444-8444-444444444444','11111111-1111-4111-8111-111111111111'),
+  ('dddddddd-4444-4444-8444-444444444444','22222222-2222-4222-8222-222222222222'),
+  ('eeeeeeee-5555-4555-8555-555555555555','11111111-1111-4111-8111-111111111111'),
+  ('eeeeeeee-5555-4555-8555-555555555555','22222222-2222-4222-8222-222222222222'),
+  ('ffffffff-6666-4666-8666-666666666666','11111111-1111-4111-8111-111111111111'),
+  ('ffffffff-6666-4666-8666-666666666666','22222222-2222-4222-8222-222222222222')
+on conflict do nothing;

@@ -76,7 +76,7 @@ supabase db reset
 ```
 
 - 这会清空本地库后按文件名顺序重新跑全部 migration（`202608120001` 核心 schema → `002` RLS+storage → `003` audit 触发器 → `202608130001` 目录富编辑字段）再灌 seed。新增的 catalog 迁移会自动被拾起，无需手动干预。
-- seed 含 3 个 product × EN/JA/ZH、3 个 application，且**现已写入富编辑字段**（eyebrow / suitability / construction / visual_options / attachment_options / artwork_guidance / buyer_problem / attachment_considerations / visual_direction，以及基表的 tone / priority）。`supabase db reset` 之后目录即为富内容，可直接验证本次 schema 扩展是否生效——不必再靠 fixture 兜底。
+- seed 含 6 个 product × EN/JA/ZH、3 个 application，且**现已写入富编辑字段**（eyebrow / suitability / construction / visual_options / attachment_options / artwork_guidance / buyer_problem / attachment_considerations / visual_direction，以及基表的 tone / priority）。`supabase db reset` 之后目录即为富内容，可直接验证本次 schema 扩展是否生效——不必再靠 fixture 兜底。
 - **注意**：seed 不创建任何用户——账号要下一步手动建。
 
 可选单独跑：`supabase migration up` 后再 `supabase db seed`。
