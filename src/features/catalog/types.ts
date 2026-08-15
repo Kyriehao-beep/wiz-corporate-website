@@ -11,6 +11,12 @@ export interface ProductSummary {
   tone: string
 }
 
+export interface ProductMedia {
+  src: string
+  alt: Record<Locale, string>
+  objectPosition: string
+}
+
 export interface ProductDetail extends ProductSummary {
   suitability: string[]
   construction: string[]
@@ -18,6 +24,7 @@ export interface ProductDetail extends ProductSummary {
   attachmentOptions: string[]
   artworkGuidance: string
   applicationSlugs: string[]
+  image?: ProductMedia
 }
 
 export interface ApplicationSummary {

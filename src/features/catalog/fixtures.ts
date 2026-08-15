@@ -1,4 +1,4 @@
-import type { ApplicationDetail, LocalizedText, ProductDetail } from '@/features/catalog/types'
+import type { ApplicationDetail, LocalizedText, ProductDetail, ProductMedia } from '@/features/catalog/types'
 import type { Locale } from '@/i18n/locales'
 
 const t = (en: string, ja: string, zhCN: string): LocalizedText => ({ en, ja, 'zh-CN': zhCN })
@@ -6,6 +6,12 @@ const t = (en: string, ja: string, zhCN: string): LocalizedText => ({ en, ja, 'z
 type ProductFixture = Omit<ProductDetail, 'name' | 'eyebrow' | 'description' | 'suitability' | 'construction' | 'visualOptions' | 'attachmentOptions' | 'artworkGuidance'> & {
   name: LocalizedText; eyebrow: LocalizedText; description: LocalizedText; suitability: LocalizedText[]; construction: LocalizedText[]; visualOptions: LocalizedText[]; attachmentOptions: LocalizedText[]; artworkGuidance: LocalizedText
 }
+
+const productImage = (slug: string, altEn: string, altJa: string, altZhCN: string, objectPosition: string): ProductMedia => ({
+  src: `/media/drafts/product-${slug}.jpg`,
+  alt: { en: altEn, ja: altJa, 'zh-CN': altZhCN },
+  objectPosition,
+})
 type ApplicationFixture = Omit<ApplicationDetail, 'name' | 'description' | 'buyerProblem' | 'attachmentConsiderations' | 'visualDirection'> & {
   name: LocalizedText; description: LocalizedText; buyerProblem: LocalizedText; attachmentConsiderations: LocalizedText; visualDirection: LocalizedText
 }
@@ -41,6 +47,11 @@ export const productFixtures: ProductFixture[] = [
     slug: 'heat-transfer-rubber-patches', index: '01', tone: 'lime',
     name: t('Heat Transfer Silicone Labels', '熱転写シリコンラベル', '定制热转印硅胶标'),
     eyebrow: t('Core product', 'コア製品', '核心产品'),
+    image: productImage('heat-transfer-rubber-patches',
+      'Heat transfer silicone labels in black and red showing LOVE ENERGY branding, with feature icons for adhesion, waterproofing, and 3D details',
+      '熱転写シリコンラベル、黒と赤のLOVE ENERGYブランディング、接着・防水・3D詳細のアイコン付き',
+      '热转印硅胶标（黑红双色 LOVE ENERGY 品牌），含强粘附、防水、3D 浮雕等特性图标',
+      '50% 50%'),
     description: t(
       'A clean, low-profile heat-transfer direction built around soft 3D silicone relief — made for yoga wear, swimwear, and performance sportswear.',
       'やわらかな3Dシリコン浮雕を核とした薄型熱転写。ヨガウェア、水着、スポーツウェアに最適。',
@@ -59,6 +70,11 @@ export const productFixtures: ProductFixture[] = [
     slug: 'custom-pvc-rubber-patches', index: '02', tone: 'sand',
     name: t('Custom PVC Rubber Patches', 'カスタムPVCラバーパッチ', '定制 PVC 橡胶标牌'),
     eyebrow: t('Core product', 'コア製品', '核心产品'),
+    image: productImage('custom-pvc-rubber-patches',
+      'Custom PVC rubber patches in various shapes — SUMMIT, EXPLORE WITHOUT LIMITS, LIVE TO RIDE, ADVENTURE AWAITS, WILDPEAK — displayed on canvas fabric',
+      '様々な形状のカスタムPVCラバーパッチ（SUMMIT、EXPLORE WITHOUT LIMITS、LIVE TO RIDEなど）をキャンバス生地に展示',
+      '多种形状的定制 PVC 橡胶标牌（SUMMIT、探索无界、骑行生活等），展示于帆布面料上',
+      '55% 45%'),
     description: t(
       'Molded brand patches with precise color separation, fine relief, and attachment options for demanding use.',
       '精密な色分けと立体表現、用途別の取り付け仕様に対応する成形ブランドパッチ。',
@@ -76,6 +92,11 @@ export const productFixtures: ProductFixture[] = [
     slug: 'hook-and-loop-rubber-patches', index: '03', tone: 'forest',
     name: t('Hook-and-Loop Rubber Patches', '面ファスナーラバーパッチ', '魔术贴橡胶标牌'),
     eyebrow: t('Interchangeable identity', '交換可能な表示', '可替换标识'),
+    image: productImage('hook-and-loop-rubber-patches',
+      'Hook-and-loop PVC rubber patches — triangular warning symbol, helicopter shaped patch, and detail shots showing premium PVC, velcro backing, and versatile use on tactical gear',
+      '面ファスナーPVCラバーパッチ — 三角警告シンボル、ヘリコプター型パッチ、プレミアムPVC・ベルクロ裏地の詳細ショット',
+      '魔术贴 PVC 橡胶标牌——三角警告符号、直升机造型补丁，以及展示优质 PVC / 魔术贴背衬 / 多用途场景的细节图',
+      '50% 42%'),
     description: t(
       'Removable rubber patches for uniforms, tactical gear, packs, and modular equipment.',
       'ユニフォーム、タクティカルギア、バッグ、モジュール装備向けの交換式パッチ。',
@@ -94,6 +115,11 @@ export const productFixtures: ProductFixture[] = [
     slug: 'earphone-hole-patches', index: '04', tone: 'stone',
     name: t('Earphone Hole Patches', 'イヤホン穴パッチ', '耳机孔标牌'),
     eyebrow: t('Cable routing detail', 'ケーブル通し穴', '线缆过孔细节'),
+    image: productImage('earphone-hole-patches',
+      'PVC headphone port patches with cable pass-through, shown on a tactical bag with earphones connected — detail strips show premium PVC, strong adhesive, secure cable management, and custom shapes',
+      'PVCイヤホン穴パッチ、ケーブル通し付き。タクティカルバッグに装着しイヤホーン接続。詳細ストリップでプレミアムPVC・強力接着・ケーブル管理・カスタム形状を展示',
+      'PVC 耳机孔标牌（带线缆过孔），展示于战术背包上并连接耳机——细节条展示优质 PVC / 强力背胶 / 安全线缆过孔 / 自定义形状与颜色',
+      '45% 35%'),
     description: t(
       'PVC/TPU earphone-hole patches that route and protect cables on backpacks and sports bags.',
       'バッグやスポーツバッグのケーブルを通し、保護するPVC/TPU製イヤホン穴パッチ。',
@@ -112,6 +138,11 @@ export const productFixtures: ProductFixture[] = [
     slug: 'keychains', index: '05', tone: 'signal',
     name: t('Custom PVC Keychains', 'カスタムPVCキーホルダー', '定制 PVC 钥匙扣'),
     eyebrow: t('Promotional item', 'プロモーション品', '促销礼品'),
+    image: productImage('keychains',
+      'Colorful custom PVC keychains — EXPLORE MORE tag, pine tree, mountain scene, compass, and red boot — hanging from a carabiner on outdoor gear',
+      'カラフルなカスタムPVCキーホルダー（EXPLORE MOREタグ、松の木、山景色、コンパス、赤いブーツ）をカラビナに掛けてアウトドアギアに装着',
+      '多彩定制 PVC 钥匙扣（探索更多标牌、松树、山景、指南针、红色靴子造型），挂于户外装备的登山扣上',
+      '50% 28%'),
     description: t(
       'Soft PVC or rubber 3D-relief keychains as promotional gifts and souvenirs, finished with a metal chain.',
       '販促品やノベルティ向けのソフトPVC/ラバー製3D浮雕キーホルダー。メタルチェーン仕様。',
@@ -146,7 +177,7 @@ export const applicationFixtures: ApplicationFixture[] = [
 }))
 
 export function localizeProduct(product: ProductFixture, locale: Locale): ProductDetail {
-  return { ...product, name: product.name[locale], eyebrow: product.eyebrow[locale], description: product.description[locale], suitability: product.suitability.map((item) => item[locale]), construction: product.construction.map((item) => item[locale]), visualOptions: product.visualOptions.map((item) => item[locale]), attachmentOptions: product.attachmentOptions.map((item) => item[locale]), artworkGuidance: product.artworkGuidance[locale] }
+  return { ...product, name: product.name[locale], eyebrow: product.eyebrow[locale], description: product.description[locale], suitability: product.suitability.map((item) => item[locale]), construction: product.construction.map((item) => item[locale]), visualOptions: product.visualOptions.map((item) => item[locale]), attachmentOptions: product.attachmentOptions.map((item) => item[locale]), artworkGuidance: product.artworkGuidance[locale], image: product.image }
 }
 export function localizeApplication(item: ApplicationFixture, locale: Locale): ApplicationDetail {
   return { ...item, name: item.name[locale], description: item.description[locale], buyerProblem: item.buyerProblem[locale], attachmentConsiderations: item.attachmentConsiderations[locale], visualDirection: item.visualDirection[locale] }

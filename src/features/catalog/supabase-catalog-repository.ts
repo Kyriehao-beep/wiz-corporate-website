@@ -1,6 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { CatalogRepository } from '@/features/catalog/types'
-import type { ApplicationDetail, ApplicationSummary, ProductDetail, ProductSummary } from '@/features/catalog/types'
+import type { CatalogRepository, ApplicationDetail, ApplicationSummary, ProductDetail, ProductMedia, ProductSummary } from '@/features/catalog/types'
 import type { Locale } from '@/i18n/locales'
 import { createServerClient } from '@/lib/supabase/server'
 
@@ -90,6 +89,30 @@ export function mapProductSummary(row: ProductRow, tr: ProductTranslationRow): P
   }
 }
 
+/** Derive product media from slug convention (matches fixtures.ts productImage helper). */
+function deriveProductMedia(slug: string): ProductMedia {
+  const altMap: Record<string, { en: string; ja: string; 'zh-CN': string }> = {
+    'heat-transfer-rubber-patches': { en: 'Heat transfer silicone labels in black and red showing LOVE ENERGY branding with feature icons', ja: '熱転写シリコンラベル、黒と赤のLOVE ENERGYブランディング', 'zh-CN': '热转印硅胶标（黑红双色 LOVE ENERGY 品牌）' },
+    'custom-pvc-rubber-patches': { en: 'Custom PVC rubber patches in various shapes displayed on canvas fabric', ja: '様々な形状のカスタムPVCラバーパッチをキャンバス生地に展示', 'zh-CN': '多种形状的定制 PVC 橡胶标牌，展示于帆布面料上' },
+    'hook-and-loop-rubber-patches': { en: 'Hook-and-loop PVC rubber patches — triangular symbol, helicopter patch, and detail shots', ja: '面ファスナーPVCラバーパッチ — 三角シンボル、ヘリコプターパッチ', 'zh-CN': '魔术贴 PVC 橡胶标牌——三角符号、直升机造型及细节图' },
+    'earphone-hole-patches': { en: 'PVC headphone port patches with cable pass-through on tactical bag', ja: 'PVCイヤホン穴パッチ、ケーブル通し付きでタクティカルバッグに装着', 'zh-CN': 'PVC 耳机孔标牌（带线缆过孔），展示于战术背包' },
+    'keychains': { en: 'Colorful custom PVC keychains hanging from carabiner on outdoor gear', ja: 'カラフルなカスタムPVCキーホルダーをアウトドアギアに装着', 'zh-CN': '多彩定制 PVC 钥匙扣，挂于户外装备登山扣上' },
+  }
+  const opMap: Record<string, string> = {
+    'heat-transfer-rubber-patches': '50% 50%',
+    'custom-pvc-rubber-patches': '55% 45%',
+    'hook-and-loop-rubber-patches': '50% 42%',
+    'earphone-hole-patches': '45% 35%',
+    'keychains': '50% 28%',
+  }
+  const alt = altMap[slug] ?? altMap['custom-pvc-rubber-patches']!
+  return {
+    src: `/media/drafts/product-${slug}.jpg`,
+    alt: { en: alt.en, ja: alt.ja, 'zh-CN': alt['zh-CN'] },
+    objectPosition: opMap[slug] ?? '50% 50%',
+  }
+}
+
 export function mapProductDetail(
   row: ProductRow,
   tr: ProductTranslationRow,
@@ -106,6 +129,7 @@ export function mapProductDetail(
     applicationSlugs: (row.product_applications ?? [])
       .map((a) => a.applications?.slug)
       .filter((slug): slug is string => typeof slug === 'string'),
+    image: deriveProductMedia(row.slug),
   }
 }
 
