@@ -9,6 +9,7 @@ export interface ProductSummary {
   description: string
   index: string
   tone: string
+  image?: ProductMedia
 }
 
 export interface ProductMedia {

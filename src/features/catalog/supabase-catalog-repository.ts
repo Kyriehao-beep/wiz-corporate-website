@@ -86,6 +86,7 @@ export function mapProductSummary(row: ProductRow, tr: ProductTranslationRow): P
     description: tr.summary,
     index: String(row.display_order).padStart(2, '0'),
     tone: row.tone,
+    image: deriveProductMedia(row.slug),
   }
 }
 

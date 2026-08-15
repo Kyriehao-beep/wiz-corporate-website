@@ -72,6 +72,11 @@ describe('mapProductSummary', () => {
       description: 'JA summary',
       index: '01',
       tone: 'lime',
+      image: {
+        src: '/media/drafts/product-custom-pvc-rubber-patches.jpg',
+        alt: { en: expect.any(String), ja: expect.any(String), 'zh-CN': expect.any(String) },
+        objectPosition: '55% 45%',
+      },
     })
   })
 })

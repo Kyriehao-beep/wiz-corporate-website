@@ -136,6 +136,8 @@ button { font: inherit; }
 .catalog-card { grid-column: span 2; min-height: 460px; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
 .catalog-card:nth-child(4), .catalog-card:nth-child(5) { grid-column: span 3; }
 .catalog-card__top { display: flex; justify-content: space-between; }
+.catalog-card__media { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); background: var(--surface-strong); }
+.catalog-card__media img { object-fit: cover; }
 .catalog-card__shape { width: 58%; aspect-ratio: 1.25; display: grid; place-items: center; align-self: center; transform: rotate(-5deg); border: 6px solid #26352c; border-radius: 28% 8% 22% 10%; background: var(--signal); box-shadow: 0 20px 40px rgb(0 0 0 / 14%); color: var(--accent-dark); }
 .catalog-card__shape span { font-size: 3rem; font-weight: 900; }
 .catalog-card--sand .catalog-card__shape { background: #d2bea0; }.catalog-card--stone .catalog-card__shape { background: #aeb4b0; }.catalog-card--forest .catalog-card__shape { background: #476252; color: white; }.catalog-card--signal .catalog-card__shape { border-radius: 50%; }
