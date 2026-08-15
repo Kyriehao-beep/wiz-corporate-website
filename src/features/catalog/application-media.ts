@@ -60,8 +60,17 @@ const mediaBySlug = {
   },
 } satisfies Record<string, ApplicationMediaEntry>
 
-export function getApplicationMedia(slug: string, locale: Locale) {
-  const entry = mediaBySlug[slug as keyof typeof mediaBySlug]
-  if (!entry) throw new Error(`Missing application media for ${slug}`)
-  return { src: entry.src, alt: entry.alt[locale], objectPosition: entry.objectPosition }
+/** Safe fallback when a slug has no dedicated media entry yet (e.g. stale DB). */
+const FALLBACK_MEDIA: ApplicationMediaEntry = {
+  src: '/media/drafts/application-placeholder.png',
+  alt: {
+    en: 'Application imagery coming soon',
+    ja: 'Applications imagery coming soon',
+    'zh-CN': 'Application imagery coming soon',
+  },
+  objectPosition: '50% 50%',
+}
+
+export function getApplicationMedia(slug: string, locale: Locale): ApplicationMediaEntry {
+  return mediaBySlug[slug as keyof typeof mediaBySlug] ?? FALLBACK_MEDIA
 }
