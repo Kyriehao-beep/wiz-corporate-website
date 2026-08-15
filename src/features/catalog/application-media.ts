@@ -9,13 +9,13 @@ type ApplicationMediaEntry = {
 const mediaBySlug = {
   // ── Media keyed by application slug (matches fixtures.ts + seed.sql) ──
   'surf-watersports': {
-    src: '/media/drafts/application-surf-watersports.png',
-    alt: { en: 'Technical watersports gear beside a surfboard on a rugged shore', ja: '岩場の海岸に置かれたサーフボードとウォータースポーツギア', 'zh-CN': '礁石海岸旁的冲浪板与水上运动装备' },
-    objectPosition: '50% 50%',
+    src: '/media/drafts/application-surf-watersports.jpg',
+    alt: { en: 'Surfboard with custom rubber patch resting on a tropical beach at golden hour, surrounded by watersports gear', ja: 'ゴールデンアワーに熱帯のビーチに置かれたカスタムラバーパッチ付きのサーフボードとウォータースポーツギア', 'zh-CN': '带定制橡胶补丁的冲浪板在黄金时刻的热带沙滩上，周围环绕水上运动装备' },
+    objectPosition: '50% 45%',
   },
   'outdoor-apparel': {
-    src: '/media/drafts/application-outdoor-apparel.png',
-    alt: { en: 'Layered technical outdoor apparel arranged in a misty forest setting', ja: '霧の森に置かれたレイヤード仕様のアウトドアウェア', 'zh-CN': '薄雾森林环境中的多层户外技术服装' },
+    src: '/media/drafts/application-outdoor-apparel.jpg',
+    alt: { en: 'Hiker wearing outdoor jacket and cap adorned with custom PVC rubber patches against a mountain vista', ja: '山並みを背景にカスタムPVCラバーパッチをあしらったアウトドアジャケットとキャップを着用するハイカー', 'zh-CN': '身着带定制 PVC 橡胶补丁的户外夹克与帽子的徒步者，背景是壮丽山景' },
     objectPosition: '50% 45%',
   },
   'yoga-wear': {
@@ -29,9 +29,9 @@ const mediaBySlug = {
     objectPosition: '50% 50%',
   },
   'tactical-uniforms': {
-    src: '/media/drafts/application-tactical-uniforms.png',
-    alt: { en: 'Modular field pack and uniform textiles in a controlled equipment setting', ja: '整然とした装備環境に置かれたモジュール式パックとユニフォーム生地', 'zh-CN': '整洁装备环境中的模块化背包与制服面料' },
-    objectPosition: '50% 48%',
+    src: '/media/drafts/application-tactical-uniforms.jpg',
+    alt: { en: 'Tactical operator in full uniform with custom rubber patches on vest and sleeve, showcasing professional branding', ja: 'ベストと袖にカスタムラバーパッチをあしらったフルユニフォームの戦術オペレーター、プロフェッショナルなブランディングを披露', 'zh-CN': '身着全套制服的战术人员，背心与袖口佩戴定制橡胶补丁，展现专业品牌形象' },
+    objectPosition: '50% 40%',
   },
   footwear: {
     src: '/media/drafts/application-footwear.png',
@@ -39,9 +39,9 @@ const mediaBySlug = {
     objectPosition: '50% 55%',
   },
   workwear: {
-    src: '/media/drafts/application-workwear.png',
-    alt: { en: 'Durable work jacket in a clean and organized workshop environment', ja: '清潔で整頓された作業環境に置かれた耐久ワークジャケット', 'zh-CN': '整洁有序工作环境中的耐用工装夹克' },
-    objectPosition: '50% 45%',
+    src: '/media/drafts/application-workwear.jpg',
+    alt: { en: 'Craftsman in rugged work jacket with custom rubber patch on the sleeve, set against a mountain ranch backdrop', ja: '山間の牧場を背景に、袖にカスタムラバーパッチをあしらったタフなワークジャケットを着用する職人', 'zh-CN': '身着带定制橡胶补丁的粗犷工装夹克的工匠，背景是山间牧场' },
+    objectPosition: '50% 40%',
   },
   'clubs-events': {
     src: '/media/drafts/application-clubs-events.png',
@@ -54,9 +54,9 @@ const mediaBySlug = {
     objectPosition: '50% 50%',
   },
   'marine-equipment': {
-    src: '/media/drafts/application-marine-equipment.png',
-    alt: { en: 'Marine dry bag, rope, and technical hardware on a clean boat deck', ja: '清潔なボートデッキに置かれたマリンドライバッグ、ロープ、金具', 'zh-CN': '整洁船面上的海事防水包、绳索与技术五金' },
-    objectPosition: '50% 52%',
+    src: '/media/drafts/application-marine-equipment.jpg',
+    alt: { en: 'Angler in fishing vest with custom rubber patches, holding a rod on the open water with marine gear nearby', ja: 'カスタムラバーパッチ付きのフィッシングベストを着用し、水面でロッドを持つアングラー、周囲にマリンギア', 'zh-CN': '身着带定制橡胶补丁钓鱼背心的垂钓者在开阔水面上持竿，周围有海事装备' },
+    objectPosition: '50% 40%',
   },
 } satisfies Record<string, ApplicationMediaEntry>
 

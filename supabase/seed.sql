@@ -25,8 +25,8 @@
 insert into public.applications (id, slug, display_order, tone, priority) values
   ('c1111111-1111-4111-8111-111111111111', 'outdoor-apparel', 1, 'ocean', true),
   ('c2222222-2222-4222-8222-222222222222', 'yoga-wear', 2, 'forest', true),
-  ('c3333333-3333-4333-8333-333333333333', 'surf-watersports', 3, 'stone', false),
-  ('c4444444-4444-4444-8444-444444444444', 'backpacks-gear-bags', 4, 'sand', true),
+  ('c3333333-3333-4333-8333-333333333333', 'surf-watersports', 3, 'stone', true),
+  ('c4444444-4444-4444-8444-444444444444', 'backpacks-gear-bags', 4, 'sand', false),
   ('c5555555-5555-4555-8555-555555555555', 'tactical-uniforms', 5, 'lime', false),
   ('c6666666-6666-4666-8666-666666666666', 'footwear', 6, 'signal', false),
   ('c7777777-7777-4777-8777-777777777777', 'workwear', 7, 'forest', false),

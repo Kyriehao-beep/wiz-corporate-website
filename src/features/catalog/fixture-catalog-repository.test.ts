@@ -19,7 +19,7 @@ it('exposes the approved product and application catalog', async () => {
   expect(applications.filter((item) => item.priority).map((item) => item.slug)).toEqual([
     'outdoor-apparel',
     'yoga-wear',
-    'backpacks-gear-bags',
+    'surf-watersports',
   ])
 })
 
