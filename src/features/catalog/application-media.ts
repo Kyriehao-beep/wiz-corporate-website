@@ -34,6 +34,11 @@ const mediaBySlug = {
     alt: { en: 'Layered technical outdoor apparel arranged in a misty forest setting', ja: '霧の森に置かれたレイヤード仕様のアウトドアウェア', 'zh-CN': '薄雾森林环境中的多层户外技术服装' },
     objectPosition: '50% 45%',
   },
+  'yoga-wear': {
+    src: '/media/drafts/application-yoga-wear.png',
+    alt: { en: 'Soft activewear folded beside a tranquil studio mat in calm light', ja: '穏やかな光のスタジオに置かれたヨガマットとソフトアクティブウェア', 'zh-CN': '柔和光线中静谧工作室旁的瑜伽垫与柔软运动服' },
+    objectPosition: '50% 50%',
+  },
   'backpacks-gear-bags': {
     src: '/media/drafts/application-backpacks-gear-bags.png',
     alt: { en: 'Technical backpacks and gear bags prepared at a quiet trailhead', ja: '静かな登山口に準備されたテクニカルバックパックとギアバッグ', 'zh-CN': '安静登山口旁准备就绪的技术背包与装备包' },

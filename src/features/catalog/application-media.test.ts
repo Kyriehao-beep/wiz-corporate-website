@@ -6,8 +6,9 @@ import { applicationFixtures } from '@/features/catalog/fixtures'
 describe('application media', () => {
   it('provides public-safe visual media for every catalog application', () => {
     const expectedSlugs = [
-      'surf-watersports',
       'outdoor-apparel',
+      'yoga-wear',
+      'surf-watersports',
       'backpacks-gear-bags',
       'tactical-uniforms',
       'footwear',

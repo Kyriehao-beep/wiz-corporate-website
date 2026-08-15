@@ -9,6 +9,6 @@ it('presents the priority application, manufacturing capability, and inquiry pat
 
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/precision/i)
   expect(screen.getAllByRole('link', { name: /start your custom patch/i }).length).toBeGreaterThan(0)
-  expect(screen.getByText('Surf & Watersports')).toBeInTheDocument()
+  expect(screen.getByText('Outdoor Apparel')).toBeInTheDocument()
   expect(screen.getAllByText(/AI-assisted color matching/i).length).toBeGreaterThan(0)
 })

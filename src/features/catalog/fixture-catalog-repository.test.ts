@@ -9,16 +9,16 @@ it('exposes the approved product and application catalog', async () => {
   ])
 
   expect(products.map((item) => item.slug)).toEqual([
-    'custom-pvc-rubber-patches',
     'heat-transfer-rubber-patches',
-    'sew-on-rubber-patches-labels',
+    'custom-pvc-rubber-patches',
     'hook-and-loop-rubber-patches',
-    'specialty-products',
+    'earphone-hole-patches',
+    'keychains',
   ])
-  expect(applications).toHaveLength(9)
+  expect(applications).toHaveLength(10)
   expect(applications.filter((item) => item.priority).map((item) => item.slug)).toEqual([
-    'surf-watersports',
     'outdoor-apparel',
+    'yoga-wear',
     'backpacks-gear-bags',
   ])
 })
