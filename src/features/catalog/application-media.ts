@@ -19,9 +19,9 @@ const mediaBySlug = {
     objectPosition: '50% 45%',
   },
   'yoga-wear': {
-    src: '/media/drafts/application-yoga-wear.png',
-    alt: { en: 'Soft activewear folded beside a tranquil studio mat in calm light', ja: '穏やかな光のスタジオに置かれたヨガマットとソフトアクティブウェア', 'zh-CN': '柔和光线中静谧工作室旁的瑜伽垫与柔软运动服' },
-    objectPosition: '50% 50%',
+    src: '/media/drafts/application-yoga-wear.jpg',
+    alt: { en: 'Woman in olive green activewear practicing cobra pose on a yoga mat, with WIZ-branded water bottle and cork blocks nearby', ja: 'オリーブグリーンのアクティブウェアを着た女性がヨガマットの上でコブラポーズ、WIZブランドのウォーターボトルとコルクブロックが近くに', 'zh-CN': '身着橄榄绿运动服的女性在瑜伽垫上练习眼镜蛇式，身旁有 WIZ 品牌水壶与软木瑜伽砖' },
+    objectPosition: '50% 45%',
   },
   'backpacks-gear-bags': {
     src: '/media/drafts/application-backpacks-gear-bags.png',

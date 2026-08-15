@@ -21,7 +21,7 @@ describe('application media', () => {
     expect(applicationFixtures.map(({ slug }) => slug)).toEqual(expectedSlugs)
     for (const slug of expectedSlugs) {
       const media = getApplicationMedia(slug, 'en')
-      expect(media.src).toBe(`/media/drafts/application-${slug}.png`)
+      expect(media.src).toMatch(new RegExp(`^/media/drafts/application-${slug}\\.(png|jpg)$`))
       expect(media.alt.en).not.toMatch(/\bAI\b|AI DRAFT|draft visual/i)
       expect(media.alt.en.length).toBeGreaterThan(20)
       expect(media.objectPosition).toMatch(/%/)
