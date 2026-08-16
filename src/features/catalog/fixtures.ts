@@ -48,9 +48,9 @@ export const productFixtures: ProductFixture[] = [
     name: t('Heat Transfer Silicone Labels', '熱転写シリコンラベル', '定制热转印硅胶标'),
     eyebrow: t('Core product', 'コア製品', '核心产品'),
     image: productImage('heat-transfer-rubber-patches',
-      'Heat transfer silicone labels in black and red showing LOVE ENERGY branding, with feature icons for adhesion, waterproofing, and 3D details',
-      '熱転写シリコンラベル、黒と赤のLOVE ENERGYブランディング、接着・防水・3D詳細のアイコン付き',
-      '热转印硅胶标（黑红双色 LOVE ENERGY 品牌），含强粘附、防水、3D 浮雕等特性图标',
+      'Custom heat transfer silicone labels marketing display — LOVE ENERGY branding on black patches, feature icons for adhesion and waterproofing, application categories for outdoor apparel and sportswear',
+      'カスタム熱転写シリコンラベルのマーケティング展示 — LOVE ENERGYブランディング、接着・防水アイコン、アウトドア・スポーツウェア用途',
+      '定制热转印硅胶标营销展示图——LOVE ENERGY 品牌黑底补丁，强粘附/防水特性图标，户外服装与运动装备应用分类',
       '50% 50%'),
     description: t(
       'A clean, low-profile heat-transfer direction built around soft 3D silicone relief — made for yoga wear, swimwear, and performance sportswear.',
