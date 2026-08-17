@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowUpRight, Menu, X } from 'lucide-react'
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
@@ -26,7 +27,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     <header className="site-header">
       <Container className="site-header__inner">
         <a aria-label="WIZ home" className="brand" href={`/${locale}`} translate="no">
-          <span className="brand__mark" aria-hidden="true">W</span>
+          <Image src="/media/logo/wiz-logo.png" alt="WIZ" width={40} height={40} className="brand__logo" priority />
           <span className="brand__name">WIZ</span>
           <span className="brand__descriptor">Rubber Patch<br />Manufacturing</span>
         </a>

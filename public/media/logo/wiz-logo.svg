@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="WIZ">
+  <rect width="512" height="512" rx="64" fill="#E2231A"/>
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
+        font-family="Helvetica, Arial, sans-serif" font-weight="700"
+        font-size="250" letter-spacing="2" fill="#FFFFFF">wiz</text>
+</svg>

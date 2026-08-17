@@ -43,9 +43,8 @@ button { font: inherit; }
 }
 .site-header__inner { min-height: 84px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
 .brand { min-height: 44px; display: inline-flex; align-items: center; gap: .7rem; }
-.brand__mark {
-  display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%;
-  background: var(--accent-dark); color: var(--signal); font-size: 1rem; font-weight: 900;
+.brand__logo {
+  width: 40px; height: 40px; border-radius: 10px; object-fit: contain;
 }
 .brand__name { font-size: 1.42rem; font-weight: 800; letter-spacing: -.06em; }
 .brand__descriptor { padding-left: .7rem; border-left: 1px solid var(--border); color: var(--muted); font-size: .62rem; line-height: 1.25; text-transform: uppercase; letter-spacing: .08em; }
