@@ -21,11 +21,14 @@ describe('supporting trust pages', () => {
     expect(screen.getByRole('img', { name: /sampling and repeat production/i })).toBeInTheDocument()
     expect(screen.queryByText(/AI DRAFT/i)).not.toBeInTheDocument()
   })
-  it('does not invent company contact values', () => {
+  it('shows approved company contact and profile values', () => {
     render(<ContactPage locale="en" />)
-    expect(screen.getByText(/awaiting approved company details/i)).toBeInTheDocument()
+    expect(screen.getAllByText('hao3832385@163.com').length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/\+86 18566182299/).length).toBeGreaterThan(0)
+    expect(screen.getByText(/wizrubberpatch\.en\.alibaba\.com/i)).toBeInTheDocument()
     render(<AboutPage locale="en" />)
-    expect(screen.getByText(/owned mainland factory/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Dongguan WIZ Electronic Gift Co\., Limited/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/owned Dongguan factory/i)).toBeInTheDocument()
   })
   it('renders the guided RFQ wizard', async () => {
     const messages = await loadMessages('en')
