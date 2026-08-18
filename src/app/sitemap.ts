@@ -3,6 +3,8 @@ import { applicationFixtures, productFixtures } from '@/features/catalog/fixture
 import { locales } from '@/i18n/locales'
 import { siteUrl } from '@/lib/seo'
 
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = ['', '/products', '/applications', '/custom-process', '/capabilities', '/about', '/contact', '/privacy', '/terms', '/rfq']
   const productPaths = productFixtures.map(({ slug }) => `/products/${slug}`)

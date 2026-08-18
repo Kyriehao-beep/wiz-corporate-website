@@ -1,0 +1,64 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, agent/public-website-foundation]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # GitHub Pages is static-only. Routes that need a server runtime
+      # (admin console, API, auth/login, RFQ submit) are excluded from the
+      # export; their source is kept for a future full-stack deployment.
+      - name: Exclude server-dependent routes
+        run: rm -rf "src/app/[locale]/(admin)" "src/app/[locale]/(auth)" "src/app/[locale]/(site)/rfq" src/app/api
+
+      - name: Build static site
+        run: pnpm build
+        env:
+          BASE_PATH: /wiz-corporate-website
+          NEXT_PUBLIC_SITE_URL: https://kyriehao-beep.github.io/wiz-corporate-website
+          # Backend-free static deploy: serve the curated catalog fixtures
+          # instead of requiring a Supabase connection at build time.
+          CATALOG_SOURCE: fixture
+
+      - name: Post-export (root redirect + .nojekyll)
+        run: node scripts/post-export.mjs
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

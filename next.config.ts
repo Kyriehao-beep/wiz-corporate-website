@@ -5,12 +5,17 @@ import createNextIntlPlugin from 'next-intl/plugin'
 // the server-action payload ceiling above the 1 MB default so multi-file uploads
 // don't get rejected. Path is `experimental.serverActions.bodySizeLimit` (verified
 // against next/dist/server/config-schema.js). Headroom over the 100 MB policy max.
+const BASE_PATH = process.env.BASE_PATH ?? ''
+
 const nextConfig: NextConfig = {
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '120mb',
-    },
-  },
+  // GitHub Pages: emit a fully static site (no server runtime).
+  output: 'export',
+  // next/image optimization requires a server; disable for static hosting.
+  images: { unoptimized: true },
+  // GitHub Pages serves directories; trailing slashes keep asset URLs stable.
+  trailingSlash: true,
+  // Project-site subpath, e.g. /wiz-corporate-website. Empty for user/org sites.
+  basePath: BASE_PATH,
 }
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')

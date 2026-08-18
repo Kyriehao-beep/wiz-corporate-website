@@ -6,7 +6,6 @@ import { ColorMatchingStory } from '@/components/site/color-matching-story'
 import { Button, ButtonLink } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
 import type { Locale } from '@/i18n/locales'
-import { RfqWizard } from '@/components/rfq/rfq-wizard'
 import {
   aboutCopy,
   companyContact,
@@ -77,4 +76,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
 export function LegalPage({ locale, kind }: { locale: Locale; kind: 'privacy' | 'terms' }) { const t = text[locale]; const title = t[kind]; return <main id="main-content"><PageHero eyebrow="Draft · Company review required" title={title} lead={t.legal}/><section className="content-section"><Container className="legal-copy"><h2>{locale === 'zh-CN' ? '发布前待确认' : locale === 'ja' ? '公開前の確認事項' : 'Before publication'}</h2><p>{locale === 'zh-CN' ? '需在后端、表单数据流、保留期限、服务商、联系方式和适用法律确定后，由企业审核正式文本。' : locale === 'ja' ? 'バックエンド、フォームのデータフロー、保存期間、サービス提供者、連絡先、準拠法の確定後に正式文面を企業が確認します。' : 'Final copy requires company review after the backend, form data flow, retention period, service providers, contact details, and governing law are confirmed.'}</p></Container></section></main> }
 
-export function RfqPage({ locale }: { locale: Locale }) { const t = text[locale]; return <main id="main-content"><PageHero eyebrow="RFQ / Project brief" title={t.rfq} /><section className="content-section"><Container><RfqWizard locale={locale} /></Container></section></main> }
+// NOTE: The RFQ wizard uses a Server Action (`submitRfqAction`) and is therefore
+// intentionally NOT part of this module — it lives in the `(site)/rfq` route,
+// which is excluded from the static export. Keeping it out of this shared module
+// prevents the server action from leaking into every static page that imports it.

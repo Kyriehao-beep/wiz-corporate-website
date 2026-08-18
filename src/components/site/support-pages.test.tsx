@@ -1,9 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
 import { describe, expect, it } from 'vitest'
 
-import { loadMessages } from '@/i18n/messages'
-import { AboutPage, CapabilitiesPage, ContactPage, ProcessPage, RfqPage } from '@/components/site/support-pages'
+import { AboutPage, CapabilitiesPage, ContactPage, ProcessPage } from '@/components/site/support-pages'
 
 describe('supporting trust pages', () => {
   it('presents the process and approved capability claims', () => {
@@ -29,17 +27,5 @@ describe('supporting trust pages', () => {
     render(<AboutPage locale="en" />)
     expect(screen.getAllByText(/Dongguan WIZ Electronic Gift Co\., Limited/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/owned Dongguan factory/i)).toBeInTheDocument()
-  })
-  it('renders the guided RFQ wizard', async () => {
-    const messages = await loadMessages('en')
-    render(
-      <NextIntlClientProvider locale="en" messages={messages}>
-        <RfqPage locale="en" />
-      </NextIntlClientProvider>,
-    )
-    expect(screen.getByLabelText(/work email/i)).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: /custom pvc rubber patches/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /submit inquiry/i })).toBeInTheDocument()
-    expect(screen.getByText(/i agree to the privacy policy/i)).toBeInTheDocument()
   })
 })
