@@ -39,3 +39,8 @@ trap cleanup EXIT
 
 # 3. Build a fully static export from fixtures (no backend / no cookies()).
 CATALOG_SOURCE=fixture NODE_ENV=production npx next build --webpack
+
+# 4. Rewrite the root out/index.html from the "Loading…" stub into a real
+#    redirect to the default locale, and (for subpath hosts) prefix /media/.
+#    BASE_PATH='' keeps asset URLs at /media/ for root-path hosts (Vercel).
+BASE_PATH='' node scripts/post-export.mjs

@@ -31,7 +31,9 @@ fs.writeFileSync(path.join(OUT, '.nojekyll'), '')
 // assets (e.g. `/media/...`) with `basePath`. GitHub Pages serves the site at
 // `/wiz-corporate-website/`, so bare `/media/...` URLs 404. Rewrite every
 // `/media/` reference in the exported HTML/JS/CSS to include the base path.
-const basePath = process.env.BASE_PATH || '/wiz-corporate-website'
+// `??` (not `||`) so an explicitly-empty BASE_PATH from a root-path host
+// (Vercel/Netlify) is honoured as '' and /media/ is left un-prefixed.
+const basePath = process.env.BASE_PATH !== undefined ? process.env.BASE_PATH : '/wiz-corporate-website'
 const mediaPrefix = `${basePath}/media/`
 const REWRITE_EXT = new Set(['.html', '.js', '.css', '.json', '.xml', '.txt'])
 
