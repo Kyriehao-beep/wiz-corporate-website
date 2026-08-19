@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.wizrubberpatch.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.wizrubberpatch.com'),
   title: 'WIZ',
   description: 'Precision in Every Color. Built for the Outdoors.',
 }

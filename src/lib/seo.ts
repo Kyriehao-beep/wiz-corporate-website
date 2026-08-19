@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { Locale } from '@/i18n/locales'
 import { locales } from '@/i18n/locales'
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.wizrubberpatch.com'
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.wizrubberpatch.com'
 
 export function buildLocaleAlternates(locale: Locale, path = ''): NonNullable<Metadata['alternates']> {
   const normalized = path ? (path.startsWith('/') ? path : `/${path}`) : ''
