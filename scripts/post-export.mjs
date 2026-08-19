@@ -26,4 +26,32 @@ fs.writeFileSync(path.join(OUT, 'index.html'), html)
 // GitHub Pages runs Jekyll by default, which strips files/dirs starting with
 // an underscore (e.g. `_next`). This opts the deployment out of Jekyll.
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '')
-console.log(`post-export: wrote index.html (→ ${target}) + .nojekyll`)
+
+// next/image's `unoptimized` mode does NOT automatically prefix public-folder
+// assets (e.g. `/media/...`) with `basePath`. GitHub Pages serves the site at
+// `/wiz-corporate-website/`, so bare `/media/...` URLs 404. Rewrite every
+// `/media/` reference in the exported HTML/JS/CSS to include the base path.
+const basePath = process.env.BASE_PATH || '/wiz-corporate-website'
+const mediaPrefix = `${basePath}/media/`
+const REWRITE_EXT = new Set(['.html', '.js', '.css', '.json', '.xml', '.txt'])
+
+let rewritten = 0
+if (fs.existsSync(OUT)) {
+  const snapshot = []
+  function count(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) count(full)
+      else if (REWRITE_EXT.has(path.extname(entry.name))) {
+        const before = fs.readFileSync(full, 'utf8')
+        if (before.includes('/media/')) {
+          snapshot.push(full)
+          fs.writeFileSync(full, before.replaceAll('/media/', mediaPrefix))
+        }
+      }
+    }
+  }
+  count(OUT)
+  rewritten = snapshot.length
+}
+console.log(`post-export: wrote index.html (→ ${target}) + .nojekyll; rewrote ${rewritten} file(s) with ${mediaPrefix}`)
