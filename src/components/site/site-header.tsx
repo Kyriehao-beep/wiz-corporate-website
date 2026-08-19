@@ -2,8 +2,11 @@
 
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+
+import { companyContact } from '@/features/company/company-info'
 
 import { LocaleSwitcher } from '@/components/site/locale-switcher'
 import { ButtonLink } from '@/components/ui/button'
@@ -26,21 +29,24 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   return (
     <header className="site-header">
       <Container className="site-header__inner">
-        <a aria-label="WIZ home" className="brand" href={`/${locale}`} translate="no">
+        <Link aria-label="WIZ home" className="brand" href={`/${locale}`} translate="no">
           <Image src="/media/logo/wiz-logo.png" alt="WIZ" width={40} height={40} className="brand__logo" priority />
           <span className="brand__name">WIZ</span>
           <span className="brand__descriptor">Rubber Patch<br />Manufacturing</span>
-        </a>
+        </Link>
 
         <nav aria-label={nav('primaryLabel')} className="desktop-nav">
           {navigation.map((item) => (
-            <a href={`/${locale}${item.path}`} key={item.key}>{nav(item.key)}</a>
+            <Link href={`/${locale}${item.path}`} key={item.key}>{nav(item.key)}</Link>
           ))}
         </nav>
 
         <div className="site-header__actions">
           <LocaleSwitcher locale={locale} />
-          <ButtonLink className="header-rfq" href={`/${locale}/rfq`}>
+          <ButtonLink
+            className="header-rfq"
+            href={`mailto:${companyContact.email}?subject=WIZ%20RFQ%20Inquiry`}
+          >
             {rfq('cta')}
             <ArrowUpRight aria-hidden="true" size={16} />
           </ButtonLink>
@@ -60,9 +66,13 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <nav aria-label={nav('mobileLabel')} className="mobile-nav">
           <Container>
             {navigation.map((item) => (
-              <a href={`/${locale}${item.path}`} key={item.key}>{nav(item.key)}</a>
+              <Link href={`/${locale}${item.path}`} key={item.key}>{nav(item.key)}</Link>
             ))}
-            <ButtonLink href={`/${locale}/rfq`}>{rfq('cta')}</ButtonLink>
+            <ButtonLink
+              href={`mailto:${companyContact.email}?subject=WIZ%20RFQ%20Inquiry`}
+            >
+              {rfq('cta')}
+            </ButtonLink>
           </Container>
         </nav>
       ) : null}
